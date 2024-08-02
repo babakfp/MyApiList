@@ -12,7 +12,6 @@
         crossorigin="anonymous"
     />
     {@html `<style>
-        /* prettier-ignore */
         @font-face {
             font-family: 'Recursive Variable';
             font-style: normal;
