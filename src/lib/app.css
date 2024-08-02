@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    ::-webkit-scrollbar {
+        @apply h-0 w-0;
+    }
+}
+
+@layer base {
+    * {
+        @apply select-none outline-none drag-none;
+    }
+}
+
+@layer utilities {
+    .container {
+        @apply max-w-screen-md;
+    }
+}
