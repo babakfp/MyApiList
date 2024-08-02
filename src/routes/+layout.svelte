@@ -24,4 +24,6 @@
     </style>`}
 </svelte:head>
 
-<slot />
+<main class="container pb-16 pt-8">
+    <slot />
+</main>
