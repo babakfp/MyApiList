@@ -15,5 +15,9 @@ export default {
             extrablack: "1000",
         },
     },
+    future: {
+        hoverOnlyWhenSupported: true,
+        disableColorOpacityUtilitiesByDefault: true,
+    },
     plugins: [...allAddons()],
 } satisfies Config
