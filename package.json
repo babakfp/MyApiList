@@ -6,6 +6,7 @@
         "format": "prettier -w ."
     },
     "devDependencies": {
+        "@fontsource-variable/recursive": "5.0.18",
         "@ianvs/prettier-plugin-sort-imports": "4.3.1",
         "@sveltejs/adapter-vercel": "5.4.1",
         "@sveltejs/kit": "2.5.19",
@@ -16,6 +17,7 @@
         "prettier": "3.3.3",
         "prettier-plugin-svelte": "3.2.6",
         "prettier-plugin-tailwindcss": "0.6.5",
+        "remeda": "2.7.0",
         "svelte": "4.2.18",
         "tailwindcss": "3.4.7",
         "tailwindcss-addons": "1.10.1",
