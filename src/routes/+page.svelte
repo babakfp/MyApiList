@@ -205,7 +205,7 @@
     {#if pageApis.length}
         <ul class="space-y-4">
             {#each pageApis as api}
-                <ApiCard {...api} />
+                <ApiCard {api} />
             {/each}
         </ul>
     {:else}
