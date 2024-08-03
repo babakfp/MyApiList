@@ -19,7 +19,7 @@
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
     import Pagination from "$lib/components/Pagination.svelte"
     import PaginationButton from "$lib/components/PaginationButton.svelte"
-    import { apis, apisPropsKeys, apisPropsKeysValues, type Api } from "$lib/db"
+    import { apis, apisPropsKeysValues, type Api } from "$lib/db"
 
     const qp = queryParameters()
 
@@ -45,8 +45,16 @@
     let apisToShow: Api[] = []
     let pageApis: Api[] = []
 
+    let oldPage = $qp.page
     qp.subscribe((v) => {
-        v.page = 1
+        // When user changes the filters, reset the page to 1, this condition is to avoid
+        // the page to be reset to 1 when the user changes the page manually.
+        if (v.page === oldPage) {
+            v.page = 1
+        }
+
+        oldPage = v.page
+
         apisToShow = apis
 
         if (v.search) {
@@ -209,7 +217,7 @@
             <PaginationButton
                 on:click={() => {
                     if (Number($qp.page) > 1) {
-                        $qp.page = Number($qp.page) - 1
+                        $qp.page = String(Number($qp.page) - 1)
                     }
                 }}
                 isDisabled={Number($qp.page) === 1}
@@ -220,7 +228,7 @@
             <PaginationButton
                 on:click={() => {
                     if (Number($qp.page) < pageCount) {
-                        $qp.page = Number($qp.page) + 1
+                        $qp.page = String(Number($qp.page) + 1)
                     }
                 }}
                 isDisabled={Number($qp.page) === pageCount}
