@@ -101,15 +101,17 @@
                     {@const label = $qp[field.label] || field.label}
 
                     <Listbox bind:value={$qp[field.label]}>
-                        <ListboxButton
-                            class="relative flex h-12 w-full cursor-pointer items-center justify-between border-2 border-gray-800 px-4 {label ===
-                                field.label && 'text-gray-400'}"
-                        >
-                            {label}
-                            <IconCaretDownFill class="text-gray-600" />
+                        <div class="flex gap-2">
+                            <ListboxButton
+                                class="relative flex h-12 w-full flex-1 cursor-pointer items-center justify-between border-2 border-gray-800 px-4 {label ===
+                                    field.label && 'text-gray-400'}"
+                            >
+                                {label}
+                                <IconCaretDownFill class="text-gray-600" />
+                            </ListboxButton>
                             {#if $qp[field.label]}
                                 <button
-                                    class="absolute right-4 h-12 -translate-x-4 px-4 text-gray-600 inset-y-center hover:text-gray-100"
+                                    class="size-12 border-2 border-gray-800 text-gray-600 hover:text-gray-100"
                                     on:click={() => {
                                         $qp[field.label] = undefined
                                     }}
@@ -117,7 +119,8 @@
                                     <IconXCircleFill />
                                 </button>
                             {/if}
-                        </ListboxButton>
+                        </div>
+
                         <ListboxOptions
                             class="translate-y-4 border-2 border-gray-800"
                         >
