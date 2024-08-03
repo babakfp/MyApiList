@@ -23,49 +23,53 @@
 
     const qp = queryParameters()
 
+    if (!$qp.search) {
+        $qp.search = ""
+    }
+
     if (!$qp.page) {
-        $qp.page = 1
+        $qp.page = "1"
     }
 
     if (!$qp.pageSize) {
-        $qp.pageSize = 10
+        $qp.pageSize = "10"
     }
 
     const idx = lunr(function () {
         this.ref("url")
         this.field("name")
         this.field("description")
-
-        apisPropsKeys.forEach((p) => {
-            this.field(p)
-        })
-
-        apis.forEach((api) => {
-            this.add(api)
-        }, this)
+        apis.forEach((api) => this.add(api))
     })
 
     let apisToShow: Api[] = []
     let pageApis: Api[] = []
 
-    $: {
+    qp.subscribe((v) => {
+        v.page = 1
         apisToShow = apis
 
+        if (v.search) {
+            const foundUrls = idx.search(v.search).map((r) => r.ref)
+            const foundApis = foundUrls
+                .map((url) => apisToShow.find((a) => a.url === url))
+                .filter((a) => a !== undefined)
+            apisToShow = foundApis
+        }
+
         apisPropsKeysValues.forEach((kv) => {
-            if ($qp[kv.label]) {
+            if (v[kv.label]) {
                 apisToShow = apisToShow.filter((api) => {
-                    return api.props[kv.label] === $qp[kv.label]
+                    return api.props[kv.label] === v[kv.label]
                 })
             }
         })
 
-        $qp.page = 1
-
         pageApis = apisToShow.slice(
-            (Number($qp.page) - 1) * $qp.pageSize,
-            Number($qp.page) * $qp.pageSize,
+            (Number(v.page) - 1) * v.pageSize,
+            Number(v.page) * v.pageSize,
         )
-    }
+    })
 
     $: pageCount = Math.ceil(apisToShow.length / Number($qp.pageSize))
 
