@@ -13,29 +13,30 @@
     import IconCheckCircleFill from "phosphor-icons-svelte/IconCheckCircleFill.svelte"
     import IconCircleFill from "phosphor-icons-svelte/IconCircleFill.svelte"
     import IconGearSixFill from "phosphor-icons-svelte/IconGearSixFill.svelte"
-    import { unique } from "remeda"
+    import IconXCircleFill from "phosphor-icons-svelte/IconXCircleFill.svelte"
     import { queryParameters } from "sveltekit-search-params"
     import ApiCard from "$lib/components/ApiCard.svelte"
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
-    import { apis, type Api } from "$lib/db"
+    import Pagination from "$lib/components/Pagination.svelte"
+    import PaginationButton from "$lib/components/PaginationButton.svelte"
+    import { apis, apisPropsKeys, apisPropsKeysValues, type Api } from "$lib/db"
 
     const qp = queryParameters()
 
-    const apiProperties = apis.map((a) => a.properties)
-    const apiPropertyKeys = unique(
-        apis.flatMap((a) => Object.keys(a.properties)),
-    )
-    const apiPropertyKeysAndValues = apiPropertyKeys.map((p) => ({
-        label: p,
-        values: unique(apiProperties.map((a) => a[p])),
-    }))
+    if (!$qp.page) {
+        $qp.page = 1
+    }
+
+    if (!$qp.pageSize) {
+        $qp.pageSize = 10
+    }
 
     const idx = lunr(function () {
         this.ref("url")
         this.field("name")
         this.field("description")
 
-        apiPropertyKeys.forEach((p) => {
+        apisPropsKeys.forEach((p) => {
             this.field(p)
         })
 
@@ -45,18 +46,28 @@
     })
 
     let apisToShow: Api[] = []
+    let pageApis: Api[] = []
 
     $: {
         apisToShow = apis
 
-        apiPropertyKeysAndValues.forEach((kv) => {
+        apisPropsKeysValues.forEach((kv) => {
             if ($qp[kv.label]) {
                 apisToShow = apisToShow.filter((api) => {
-                    return api.properties[kv.label] === $qp[kv.label]
+                    return api.props[kv.label] === $qp[kv.label]
                 })
             }
         })
+
+        $qp.page = 1
+
+        pageApis = apisToShow.slice(
+            (Number($qp.page) - 1) * $qp.pageSize,
+            Number($qp.page) * $qp.pageSize,
+        )
     }
+
+    $: pageCount = Math.ceil(apisToShow.length / Number($qp.pageSize))
 
     let isAdvancedSearchOpen = false
 </script>
@@ -80,18 +91,28 @@
 
 {#if isAdvancedSearchOpen}
     <ul class="mt-4 space-y-4">
-        {#each apiPropertyKeysAndValues as field}
+        {#each apisPropsKeysValues as field}
             <li>
                 {#if field.label === "Category"}
                     {@const label = $qp[field.label] || field.label}
 
                     <Listbox bind:value={$qp[field.label]}>
                         <ListboxButton
-                            class="flex h-12 w-full cursor-pointer items-center justify-between border-2 border-gray-800 px-4 {label ===
+                            class="relative flex h-12 w-full cursor-pointer items-center justify-between border-2 border-gray-800 px-4 {label ===
                                 field.label && 'text-gray-400'}"
                         >
                             {label}
                             <IconCaretDownFill class="text-gray-600" />
+                            {#if $qp[field.label]}
+                                <button
+                                    class="absolute right-4 h-12 -translate-x-4 px-4 text-gray-600 inset-y-center hover:text-gray-100"
+                                    on:click={() => {
+                                        $qp[field.label] = undefined
+                                    }}
+                                >
+                                    <IconXCircleFill />
+                                </button>
+                            {/if}
                         </ListboxButton>
                         <ListboxOptions
                             class="translate-y-4 border-2 border-gray-800"
@@ -121,8 +142,18 @@
                     </Listbox>
                 {:else}
                     <RadioGroup bind:value={$qp[field.label]}>
-                        <RadioGroupLabel class="mb-2 inline-block">
-                            {field.label}
+                        <RadioGroupLabel class="mb-2 flex items-center gap-2">
+                            <span>{field.label}</span>
+                            {#if $qp[field.label]}
+                                <button
+                                    class="flex text-gray-600 hover:text-gray-100"
+                                    on:click={() => {
+                                        $qp[field.label] = undefined
+                                    }}
+                                >
+                                    <IconXCircleFill />
+                                </button>
+                            {/if}
                         </RadioGroupLabel>
 
                         <ul class="flex flex-wrap gap-2">
@@ -155,14 +186,40 @@
     </ul>
 {/if}
 
-<div class="mt-4">
-    {#if apisToShow.length}
+<div class="mt-4 space-y-6">
+    {#if pageApis.length}
         <ul class="space-y-4">
-            {#each apisToShow as api}
+            {#each pageApis as api}
                 <ApiCard {...api} />
             {/each}
         </ul>
     {:else}
-        <p>No results found.</p>
+        <p class="text-center">No results found.</p>
+    {/if}
+
+    {#if apisToShow.length}
+        <Pagination>
+            <PaginationButton
+                on:click={() => {
+                    if (Number($qp.page) > 1) {
+                        $qp.page = Number($qp.page) - 1
+                    }
+                }}
+                isDisabled={Number($qp.page) === 1}
+            >
+                Previous
+            </PaginationButton>
+            <span>{$qp.page}/{pageCount}</span>
+            <PaginationButton
+                on:click={() => {
+                    if (Number($qp.page) < pageCount) {
+                        $qp.page = Number($qp.page) + 1
+                    }
+                }}
+                isDisabled={Number($qp.page) === pageCount}
+            >
+                Next
+            </PaginationButton>
+        </Pagination>
     {/if}
 </div>

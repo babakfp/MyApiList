@@ -4,7 +4,7 @@
     export let name: Api["name"]
     export let url: Api["url"]
     export let description: Api["description"]
-    export let properties: Api["properties"]
+    export let props: Api["props"]
 </script>
 
 <li>
@@ -17,7 +17,7 @@
         <h3 class="font-bold">{name}</h3>
         <p class="text-sm text-gray-400">{description}</p>
         <ul class="mt-4 flex flex-wrap gap-4">
-            {#each Object.entries(properties) as [k, v]}
+            {#each Object.entries(props) as [k, v]}
                 <li class="text-xs text-gray-600">
                     {#if k === "Category"}
                         {v}
