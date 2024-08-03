@@ -1,11 +1,10 @@
 <script lang="ts">
     import type { Api } from "$lib/db"
-    import { tagToSlug } from "$lib/utilities/api"
 
     export let name: Api["name"]
     export let url: Api["url"]
     export let description: Api["description"]
-    export let tags: Api["tags"]
+    export let properties: Api["properties"]
 </script>
 
 <li>
@@ -18,14 +17,13 @@
         <h3 class="font-bold">{name}</h3>
         <p class="text-sm text-gray-400">{description}</p>
         <ul class="mt-4 flex flex-wrap gap-4">
-            {#each tags as tag}
-                <li>
-                    <a
-                        class="text-xs text-gray-600 underline hover:text-gray-100"
-                        href="#{tagToSlug(tag)}"
-                    >
-                        {tag}
-                    </a>
+            {#each Object.entries(properties) as [k, v]}
+                <li class="text-xs text-gray-600">
+                    {#if k === "Category"}
+                        {v}
+                    {:else}
+                        {k}:{v}
+                    {/if}
                 </li>
             {/each}
         </ul>
