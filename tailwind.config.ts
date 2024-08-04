@@ -3,6 +3,7 @@ import type { Config } from "tailwindcss"
 import { allAddons } from "tailwindcss-addons"
 import { zinc } from "tailwindcss/colors"
 import { fontWeight } from "tailwindcss/defaultTheme"
+import { default as plugin } from "tailwindcss/plugin"
 
 export default {
     content: ["./src/**/*.{html,svelte}"],
@@ -34,5 +35,15 @@ export default {
         hoverOnlyWhenSupported: true,
         disableColorOpacityUtilitiesByDefault: true,
     },
-    plugins: [...allAddons()],
+    plugins: [
+        ...allAddons(),
+        plugin(({ addUtilities }) => {
+            addUtilities({
+                ".bordered": {},
+                ".clickable": {},
+                ".clickable-with-icon": {},
+                ".writable": {},
+            })
+        }),
+    ],
 } satisfies Config

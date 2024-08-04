@@ -6,7 +6,7 @@
 
 <div class="group relative flex-1">
     <input
-        class="peer h-12 w-full border-2 border-gray-800 bg-transparent pl-4 pr-[calc(theme(spacing.12)-theme(spacing.1))] placeholder-gray-600 reset-search-input"
+        class="writable peer h-12 w-full bg-transparent pl-4 pr-[calc(theme(spacing.12)-theme(spacing.1))] placeholder-gray-600 reset-search-input"
         type="search"
         placeholder="Search APIs"
         bind:value

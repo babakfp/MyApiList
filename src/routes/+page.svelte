@@ -93,7 +93,7 @@
     <ApiSearchBox bind:value={$qp.search} />
 
     <button
-        class="flex size-12 items-center justify-center border-2 border-gray-800 text-gray-600 hover:text-gray-100"
+        class="clickable-with-icon flex size-12 items-center justify-center text-gray-600"
         aria-label="Open advanced search"
         on:click={() => (isAdvancedSearchOpen = !isAdvancedSearchOpen)}
     >
@@ -111,7 +111,7 @@
                     <Listbox bind:value={$qp[field.label]}>
                         <div class="flex gap-2">
                             <ListboxButton
-                                class="relative flex h-12 w-full flex-1 cursor-pointer items-center justify-between border-2 border-gray-800 px-4 {label ===
+                                class="clickable relative flex h-12 w-full flex-1 cursor-pointer items-center justify-between px-4 {label ===
                                     field.label && 'text-gray-400'}"
                             >
                                 {label}
@@ -119,7 +119,7 @@
                             </ListboxButton>
                             {#if $qp[field.label]}
                                 <button
-                                    class="size-12 border-2 border-gray-800 text-gray-600 hover:text-gray-100"
+                                    class="clickable-with-icon size-12 text-gray-600"
                                     on:click={() => {
                                         $qp[field.label] = undefined
                                     }}
@@ -129,9 +129,7 @@
                             {/if}
                         </div>
 
-                        <ListboxOptions
-                            class="translate-y-4 border-2 border-gray-800"
-                        >
+                        <ListboxOptions class="bordered translate-y-4">
                             {#each field.values as v (v)}
                                 {@const checked = $qp[field.label] === v}
                                 <ListboxOption
@@ -174,7 +172,7 @@
                         <ul class="flex flex-wrap gap-2">
                             {#each field.values as value}
                                 <RadioGroupOption
-                                    class="flex cursor-pointer items-center gap-2 border-2 border-gray-800 px-2 py-1.5"
+                                    class="clickable flex cursor-pointer items-center gap-2 px-2 py-1.5"
                                     {value}
                                     let:checked
                                 >

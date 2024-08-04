@@ -14,8 +14,37 @@
     }
 }
 
+@layer base {
+    a[href]:not([tabindex="-1"]),
+    area[href]:not([tabindex="-1"]),
+    input:not([disabled]):not([tabindex="-1"]),
+    select:not([disabled]):not([tabindex="-1"]),
+    textarea:not([disabled]):not([tabindex="-1"]),
+    button:not([disabled]):not([tabindex="-1"]),
+    iframe:not([tabindex="-1"]),
+    [tabindex]:not([tabindex="-1"]),
+    [contentEditable="true"]:not([tabindex="-1"]) {
+        @apply focus-visible:ring-2 focus-visible:ring-teal-400;
+    }
+}
+
 @layer utilities {
     .container {
         @apply max-w-screen-md;
+    }
+}
+
+@layer utilities {
+    .bordered {
+        @apply border-2 border-gray-800;
+    }
+    .clickable {
+        @apply bordered not-[:disabled]:hover:border-gray-700;
+    }
+    .clickable-with-icon {
+        @apply clickable not-[:disabled]:hover:text-gray-100;
+    }
+    .writable {
+        @apply clickable not-[:disabled]:focus-visible:border-gray-700;
     }
 }

@@ -6,7 +6,7 @@
 
 <li>
     <a
-        class="grid gap-2 border-2 border-gray-800 p-4 hover:bg-gray-800"
+        class="clickable grid gap-2 p-4"
         href={api.url}
         target="_blank"
         rel="noopener noreferrer nofollow"
