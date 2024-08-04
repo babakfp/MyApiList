@@ -155,7 +155,9 @@
                     </Listbox>
                 {:else}
                     <RadioGroup bind:value={$qp[field.label]}>
-                        <RadioGroupLabel class="mb-2 flex items-center gap-2">
+                        <RadioGroupLabel
+                            class="mb-2 inline-flex items-center gap-2"
+                        >
                             <span>{field.label}</span>
                             {#if $qp[field.label]}
                                 <button
