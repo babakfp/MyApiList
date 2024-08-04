@@ -11,11 +11,6 @@ export default {
         extend: {
             colors: {
                 gray: zinc,
-                favicon: {
-                    100: "#f2c029",
-                    200: "#f2921d",
-                    300: "#f26938",
-                },
             },
             container: {
                 center: true,
