@@ -93,7 +93,7 @@
     <ApiSearchBox bind:value={$qp.search} />
 
     <button
-        class="clickable-with-icon flex size-12 items-center justify-center text-gray-600"
+        class="flex size-12 items-center justify-center text-gray-600 clickable-with-icon"
         aria-label="Open advanced search"
         on:click={() => (isAdvancedSearchOpen = !isAdvancedSearchOpen)}
     >
@@ -111,7 +111,7 @@
                     <Listbox bind:value={$qp[field.label]}>
                         <div class="flex gap-2">
                             <ListboxButton
-                                class="clickable relative flex h-12 w-full flex-1 cursor-pointer items-center justify-between px-4 {label ===
+                                class="relative flex h-12 w-full flex-1 cursor-pointer items-center justify-between px-4 clickable {label ===
                                     field.label && 'text-gray-400'}"
                             >
                                 {label}
@@ -119,7 +119,7 @@
                             </ListboxButton>
                             {#if $qp[field.label]}
                                 <button
-                                    class="clickable-with-icon size-12 text-gray-600"
+                                    class="size-12 text-gray-600 clickable-with-icon"
                                     on:click={() => {
                                         $qp[field.label] = undefined
                                     }}
@@ -129,7 +129,7 @@
                             {/if}
                         </div>
 
-                        <ListboxOptions class="bordered translate-y-4">
+                        <ListboxOptions class="translate-y-4 bordered">
                             {#each field.values as v (v)}
                                 {@const checked = $qp[field.label] === v}
                                 <ListboxOption
@@ -174,7 +174,7 @@
                         <ul class="flex flex-wrap gap-2">
                             {#each field.values as value}
                                 <RadioGroupOption
-                                    class="clickable flex cursor-pointer items-center gap-2 px-2 py-1.5"
+                                    class="flex cursor-pointer items-center gap-2 px-2 py-1.5 clickable"
                                     {value}
                                     let:checked
                                 >
@@ -224,7 +224,9 @@
             >
                 Previous
             </PaginationButton>
-            <span>{$qp.page}/{pageCount}</span>
+            <span class="flex justify-center text-sm">
+                {$qp.page}/{pageCount}
+            </span>
             <PaginationButton
                 on:click={() => {
                     if (Number($qp.page) < pageCount) {
