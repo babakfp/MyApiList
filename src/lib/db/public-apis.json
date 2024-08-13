@@ -8,7 +8,8 @@
             "Auth": "Key",
             "HTTPS": "Yes",
             "CORS": "Yes"
-        }
+        },
+        "hidden": true
     },
     {
         "name": "Axolotl",
@@ -19,7 +20,8 @@
             "Auth": "No",
             "HTTPS": "Yes",
             "CORS": "No"
-        }
+        },
+        "hidden": true
     },
     {
         "name": "Cat Facts",
@@ -30,7 +32,8 @@
             "Auth": "No",
             "HTTPS": "Yes",
             "CORS": "No"
-        }
+        },
+        "hidden": true
     },
     {
         "name": "Cataas",
@@ -63,7 +66,8 @@
             "Auth": "No",
             "HTTPS": "Yes",
             "CORS": "Yes"
-        }
+        },
+        "hidden": true
     },
     {
         "name": "Dog Facts",

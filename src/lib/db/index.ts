@@ -8,7 +8,7 @@ export type Api = {
     props: Record<string, string>
 }
 
-export const apis: Api[] = publicApis
+export const apis: Api[] = publicApis.filter((a) => !a.hidden)
 
 export const apisProps = apis.map((a) => a.props)
 export const apisPropsKeys = unique(apisProps.flatMap((a) => Object.keys(a)))
