@@ -1,7 +1,7 @@
 import { omit } from "remeda"
 import type { Config } from "tailwindcss"
 import { allAddons } from "tailwindcss-addons"
-import { zinc } from "tailwindcss/colors"
+import { neutral } from "tailwindcss/colors"
 import { fontWeight } from "tailwindcss/defaultTheme"
 import { default as plugin } from "tailwindcss/plugin"
 
@@ -10,7 +10,7 @@ export default {
     theme: {
         extend: {
             colors: {
-                gray: zinc,
+                gray: neutral,
             },
             container: {
                 center: true,
