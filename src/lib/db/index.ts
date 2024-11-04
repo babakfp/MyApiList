@@ -13,6 +13,6 @@ export const apis: Api[] = publicApis.filter((a) => !a.hidden)
 export const apisProps = apis.map((a) => a.props)
 export const apisPropsKeys = unique(apisProps.flatMap((a) => Object.keys(a)))
 export const apisPropsKeysValues = apisPropsKeys.map((p) => ({
-    label: p,
+    label: p as "Category" | "Auth" | "HTTPS" | "CORS",
     values: unique(apisProps.map((a) => a[p])),
 }))

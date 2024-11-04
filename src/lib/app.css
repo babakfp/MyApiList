@@ -26,6 +26,11 @@
     [contentEditable="true"]:not([tabindex="-1"]) {
         @apply focus-visible:ring-2 focus-visible:ring-teal-400;
     }
+
+    /* NOTE: data attributes are used for Zag's state machine */
+    [data-part="item"][data-focus-visible] {
+        @apply ring-2 ring-teal-400;
+    }
 }
 
 @layer utilities {
@@ -38,13 +43,14 @@
     .bordered {
         @apply border-2 border-gray-800;
     }
+    /* NOTE: data attributes are used for Zag's state machine */
     .clickable {
-        @apply bordered not-[:disabled]:hover:border-gray-700;
+        @apply bordered data-[hover]:border-gray-700 not-[:disabled]:hover:border-gray-700;
     }
     .clickable-with-icon {
-        @apply clickable not-[:disabled]:hover:text-gray-100;
+        @apply clickable data-[hover]:text-gray-100 not-[:disabled]:hover:text-gray-100;
     }
     .writable {
-        @apply clickable not-[:disabled]:focus-visible:border-gray-700;
+        @apply clickable data-[focus-visible]:border-gray-700 not-[:disabled]:focus-visible:border-gray-700;
     }
 }

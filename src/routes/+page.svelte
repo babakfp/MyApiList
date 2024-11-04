@@ -1,39 +1,31 @@
 <script lang="ts">
-    import {
-        Listbox,
-        ListboxButton,
-        ListboxOption,
-        ListboxOptions,
-        RadioGroup,
-        RadioGroupLabel,
-        RadioGroupOption,
-    } from "@rgossiaux/svelte-headlessui"
+    import * as select from "@zag-js/select"
     import lunr from "lunr"
     import IconCaretDownFill from "phosphor-icons-svelte/IconCaretDownFill.svelte"
     import IconCheckCircleFill from "phosphor-icons-svelte/IconCheckCircleFill.svelte"
     import IconCircleFill from "phosphor-icons-svelte/IconCircleFill.svelte"
     import IconGearSixFill from "phosphor-icons-svelte/IconGearSixFill.svelte"
     import IconXCircleFill from "phosphor-icons-svelte/IconXCircleFill.svelte"
-    import { queryParameters } from "sveltekit-search-params"
+    import { untrack } from "svelte"
+    import { goto } from "$app/navigation"
+    import { page } from "$app/stores"
     import ApiCard from "$lib/components/ApiCard.svelte"
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
     import Pagination from "$lib/components/Pagination.svelte"
     import PaginationButton from "$lib/components/PaginationButton.svelte"
+    import { RadioGroup, useRadioGroup } from "$lib/components/RadioGroup"
+    import { Select, useSelect } from "$lib/components/Select"
     import { apis, apisPropsKeysValues, type Api } from "$lib/db"
 
-    const qp = queryParameters()
-
-    if (!$qp.search) {
-        $qp.search = ""
-    }
-
-    if (!$qp.page) {
-        $qp.page = "1"
-    }
-
-    if (!$qp.pageSize) {
-        $qp.pageSize = "10"
-    }
+    let searchOptions = $state({
+        search: $page.url.searchParams.get("search") || "",
+        page: $page.url.searchParams.get("page") || "1",
+        pageSize: $page.url.searchParams.get("pageSize") || "10",
+        Category: $page.url.searchParams.get("search") || "",
+        Auth: $page.url.searchParams.get("search") || "",
+        HTTPS: $page.url.searchParams.get("search") || "",
+        CORS: $page.url.searchParams.get("search") || "",
+    })
 
     const idx = lunr(function () {
         this.ref("url")
@@ -42,46 +34,94 @@
         apis.forEach((api) => this.add(api))
     })
 
-    let apisToShow: Api[] = []
-    let pageApis: Api[] = []
+    let apisToShow: Api[] = $state([])
+    let pageApis: Api[] = $state([])
 
-    let oldPage = $qp.page
-    qp.subscribe((v) => {
-        // When user changes the filters, reset the page to 1, this condition is to avoid
-        // the page to be reset to 1 when the user changes the page manually.
-        if (v.page === oldPage) {
-            v.page = 1
+    let searchOptionsOldPage = searchOptions.page
+
+    $effect(() => {
+        if (searchOptions.page !== searchOptionsOldPage) {
+            searchOptionsOldPage = searchOptions.page
         }
 
-        oldPage = v.page
+        untrack(() => {
+            apisToShow = apis
+        })
 
-        apisToShow = apis
-
-        if (v.search) {
-            const foundUrls = idx.search(v.search).map((r) => r.ref)
+        if (searchOptions.search) {
+            const foundUrls = idx.search(searchOptions.search).map((r) => r.ref)
             const foundApis = foundUrls
-                .map((url) => apisToShow.find((a) => a.url === url))
+                .map((url) =>
+                    untrack(() => apisToShow.find((a) => a.url === url)),
+                )
                 .filter((a) => a !== undefined)
-            apisToShow = foundApis
+            untrack(() => {
+                apisToShow = foundApis
+            })
         }
 
-        apisPropsKeysValues.forEach((kv) => {
-            if (v[kv.label]) {
-                apisToShow = apisToShow.filter((api) => {
-                    return api.props[kv.label] === v[kv.label]
+        apisPropsKeysValues.forEach(({ label }) => {
+            if (searchOptions[label]) {
+                untrack(() => {
+                    apisToShow = apisToShow.filter((api) => {
+                        return api.props[label] === searchOptions[label]
+                    })
                 })
             }
         })
 
-        pageApis = apisToShow.slice(
-            (Number(v.page) - 1) * v.pageSize,
-            Number(v.page) * v.pageSize,
-        )
+        untrack(() => {
+            pageApis = apisToShow.slice(
+                (Number(searchOptions.page) - 1) *
+                    Number(searchOptions.pageSize),
+                Number(searchOptions.page) * Number(searchOptions.pageSize),
+            )
+        })
+
+        Object.entries(searchOptions).forEach(([key]) => {
+            $page.url.searchParams.delete(key)
+        })
+        Object.entries(searchOptions).forEach(([key, value]) => {
+            if (!value) return
+            $page.url.searchParams.set(key, value)
+        })
+
+        goto($page.url.search, { keepFocus: true })
     })
 
-    $: pageCount = Math.ceil(apisToShow.length / Number($qp.pageSize))
+    const pageCount = $derived(
+        Math.ceil(apisToShow.length / Number(searchOptions.pageSize)),
+    )
 
-    let isAdvancedSearchOpen = false
+    let isAdvancedSearchOpen = $state(false)
+
+    const radioGroups = apisPropsKeysValues
+        .filter(({ label }) => label !== "Category")
+        .map(({ label, values }) => ({
+            label,
+            radioGroup: useRadioGroup({
+                id: label.toLowerCase(),
+                value: searchOptions[label],
+                onValueChange: (details) => {
+                    searchOptions[label] = details.value
+                },
+            }),
+            values,
+        }))
+
+    const categoryOptionData = apisPropsKeysValues.find(({ label }) =>
+        label.includes("Category"),
+    )!.values
+
+    const categoryOptionCollection = select.collection({
+        items: categoryOptionData,
+    })
+
+    const categoryOption = useSelect({
+        id: "categories",
+        collection: categoryOptionCollection,
+        value: [searchOptions.Category],
+    })
 </script>
 
 <svelte:head>
@@ -90,12 +130,12 @@
 </svelte:head>
 
 <div class="flex gap-2">
-    <ApiSearchBox bind:value={$qp.search} />
+    <ApiSearchBox bind:value={searchOptions.search} />
 
     <button
         class="flex size-12 items-center justify-center text-gray-600 clickable-with-icon"
         aria-label="Open advanced search"
-        on:click={() => (isAdvancedSearchOpen = !isAdvancedSearchOpen)}
+        onclick={() => (isAdvancedSearchOpen = !isAdvancedSearchOpen)}
     >
         <IconGearSixFill />
     </button>
@@ -103,99 +143,104 @@
 
 {#if isAdvancedSearchOpen}
     <ul class="mt-4 space-y-4">
-        {#each apisPropsKeysValues as field}
-            <li>
-                {#if field.label === "Category"}
-                    {@const label = $qp[field.label] || field.label}
-
-                    <Listbox bind:value={$qp[field.label]}>
-                        <div class="flex gap-2">
-                            <ListboxButton
-                                class="relative flex h-12 w-full flex-1 cursor-pointer items-center justify-between px-4 clickable {label ===
-                                    field.label && 'text-gray-400'}"
-                            >
-                                {label}
-                                <IconCaretDownFill class="text-gray-600" />
-                            </ListboxButton>
-                            {#if $qp[field.label]}
-                                <button
-                                    class="size-12 text-gray-600 clickable-with-icon"
-                                    on:click={() => {
-                                        $qp[field.label] = undefined
-                                    }}
-                                >
-                                    <IconXCircleFill />
-                                </button>
-                            {/if}
-                        </div>
-
-                        <ListboxOptions class="translate-y-4 bordered">
-                            {#each field.values as v (v)}
-                                {@const checked = $qp[field.label] === v}
-                                <ListboxOption
-                                    class="flex cursor-pointer items-center gap-2 px-4 py-1.5 first:pt-4 last:pb-4"
-                                    value={v}
-                                >
-                                    {#if checked}
-                                        <IconCheckCircleFill class="text-xl" />
-                                    {:else}
-                                        <IconCircleFill
-                                            class="text-xl text-gray-600"
-                                        />
-                                    {/if}
-                                    <span
-                                        class="text-sm {!checked &&
-                                            'text-gray-400'}"
-                                    >
-                                        {v}
-                                    </span>
-                                </ListboxOption>
-                            {/each}
-                        </ListboxOptions>
-                    </Listbox>
-                {:else}
-                    <RadioGroup bind:value={$qp[field.label]}>
-                        <RadioGroupLabel
-                            class="mb-2 inline-flex items-center gap-2"
+        <li>
+            <Select.RootProvider select={categoryOption}>
+                <div class="flex gap-2">
+                    <Select.Control class="flex-1">
+                        <Select.Trigger
+                            class="relative flex h-12 w-full flex-1 cursor-pointer items-center justify-between px-4 clickable data-[state=checked]:text-gray-400"
                         >
-                            <span>{field.label}</span>
-                            {#if $qp[field.label]}
-                                <button
-                                    class="flex text-gray-600 hover:text-gray-100"
-                                    on:click={() => {
-                                        $qp[field.label] = undefined
-                                    }}
+                            <span>
+                                {categoryOption.api.valueAsString ||
+                                    "Categories"}
+                            </span>
+                            <IconCaretDownFill class="text-gray-600" />
+                        </Select.Trigger>
+                    </Select.Control>
+                    {#if categoryOption.api.valueAsString}
+                        <button
+                            class="size-12 text-gray-600 clickable-with-icon"
+                            onclick={() => {
+                                categoryOption.api.setValue([])
+                            }}
+                        >
+                            <IconXCircleFill />
+                        </button>
+                    {/if}
+                </div>
+                <Select.Positioner>
+                    <Select.Content
+                        class="max-h-72 overflow-y-auto bg-gray-900 bordered"
+                    >
+                        {#each categoryOptionData as item}
+                            <Select.Item
+                                {item}
+                                class="group flex cursor-pointer items-center gap-2 py-1.5 pl-4 pr-8 first:pt-4 last:pb-4"
+                            >
+                                <IconCheckCircleFill
+                                    class="text-xl group-[&:not([data-state=checked])]:hidden"
+                                />
+                                <IconCircleFill
+                                    class="text-xl text-gray-600 group-data-[state=checked]:hidden"
+                                />
+                                <Select.ItemText
+                                    {item}
+                                    class="text-sm [&:not([data-highlighted]):not([data-state=checked])]:text-gray-400"
                                 >
-                                    <IconXCircleFill />
-                                </button>
-                            {/if}
-                        </RadioGroupLabel>
-
-                        <ul class="flex flex-wrap gap-2">
-                            {#each field.values as value}
-                                <RadioGroupOption
-                                    class="flex cursor-pointer items-center gap-2 px-2 py-1.5 clickable"
+                                    {item}
+                                </Select.ItemText>
+                            </Select.Item>
+                        {/each}
+                    </Select.Content>
+                </Select.Positioner>
+            </Select.RootProvider>
+        </li>
+        {#each radioGroups as { label, radioGroup, values }}
+            <li>
+                <RadioGroup.RootProvider {radioGroup}>
+                    <RadioGroup.Label
+                        class="mb-2 inline-flex items-center gap-2"
+                    >
+                        <span>{label}</span>
+                        {#if searchOptions[label]}
+                            <button
+                                class="flex text-gray-600 hover:text-gray-100"
+                                onclick={() => {
+                                    radioGroup.api.setValue("")
+                                }}
+                            >
+                                <IconXCircleFill />
+                            </button>
+                        {/if}
+                    </RadioGroup.Label>
+                    <ul class="flex flex-wrap gap-2">
+                        {#each values as value}
+                            <li>
+                                <RadioGroup.Item
                                     {value}
-                                    let:checked
+                                    class="flex cursor-pointer items-center gap-2 rounded-full py-1.5 pl-2 pr-4 clickable"
                                 >
-                                    {#if checked}
-                                        <IconCheckCircleFill class="text-xl" />
-                                    {:else}
-                                        <IconCircleFill
-                                            class="text-xl text-gray-600"
-                                        />
-                                    {/if}
-                                    <span
-                                        class="text-sm {!checked &&
-                                            'text-gray-400'}"
-                                    >
+                                    <RadioGroup.ItemControl
                                         {value}
-                                    </span>
-                                </RadioGroupOption>
-                            {/each}
-                        </ul>
-                    </RadioGroup>
-                {/if}
+                                        class="group flex text-xl"
+                                    >
+                                        <IconCheckCircleFill
+                                            class="group-[&:not([data-state=checked])]:hidden"
+                                        />
+                                        <IconCircleFill
+                                            class="text-gray-600 group-data-[state=checked]:hidden"
+                                        />
+                                    </RadioGroup.ItemControl>
+                                    <RadioGroup.ItemText
+                                        {value}
+                                        class="text-sm [&:not([data-state=checked])]:text-gray-400"
+                                    />
+                                    <RadioGroup.ItemHiddenInput {value} />
+                                </RadioGroup.Item>
+                            </li>
+                        {/each}
+                    </ul>
+                </RadioGroup.RootProvider>
             </li>
         {/each}
     </ul>
@@ -215,25 +260,29 @@
     {#if apisToShow.length}
         <Pagination>
             <PaginationButton
-                on:click={() => {
-                    if (Number($qp.page) > 1) {
-                        $qp.page = String(Number($qp.page) - 1)
+                onclick={() => {
+                    if (Number(searchOptions.page) > 1) {
+                        searchOptions.page = String(
+                            Number(searchOptions.page) - 1,
+                        )
                     }
                 }}
-                isDisabled={Number($qp.page) === 1}
+                isDisabled={Number(searchOptions.page) === 1}
             >
                 Previous
             </PaginationButton>
             <span class="flex justify-center text-sm">
-                {$qp.page}/{pageCount}
+                {searchOptions.page}/{pageCount}
             </span>
             <PaginationButton
-                on:click={() => {
-                    if (Number($qp.page) < pageCount) {
-                        $qp.page = String(Number($qp.page) + 1)
+                onclick={() => {
+                    if (Number(searchOptions.page) < pageCount) {
+                        searchOptions.page = String(
+                            Number(searchOptions.page) + 1,
+                        )
                     }
                 }}
-                isDisabled={Number($qp.page) === pageCount}
+                isDisabled={Number(searchOptions.page) === pageCount}
             >
                 Next
             </PaginationButton>
