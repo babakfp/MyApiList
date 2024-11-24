@@ -6,15 +6,15 @@
     let {
         children,
 
-        // HTMLAttributes<HTMLLabelElement>
-        ...htmlLabelAttributes
+        // HTMLAttributes<HTMLButtonElement>
+        ...htmlButtonAttributes
     }: {
         children: Snippet
-    } & HTMLAttributes<HTMLLabelElement> = $props()
+    } & HTMLAttributes<HTMLButtonElement> = $props()
 
     const select = getContext<SelectContext>("select")
 </script>
 
-<label {...select.api.getTriggerProps()} {...htmlLabelAttributes}>
+<button {...select.api.getTriggerProps()} {...htmlButtonAttributes}>
     {@render children()}
-</label>
+</button>
