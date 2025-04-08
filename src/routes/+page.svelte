@@ -109,7 +109,7 @@
 </svelte:head>
 
 <div class="grid gap-8 lg:grid-cols-[auto_20rem]">
-    <aside class="lg:order-1">
+    <aside class="lg:sticky lg:top-8 lg:order-1 lg:self-start">
         <div class="flex gap-2">
             <ApiSearchBox bind:value={searchOptions.search} />
 
