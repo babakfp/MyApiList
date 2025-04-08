@@ -19,10 +19,10 @@
         search: page.url.searchParams.get("search") || "",
         page: page.url.searchParams.get("page") || "1",
         pageSize: page.url.searchParams.get("pageSize") || "10",
-        Category: page.url.searchParams.get("search") || "",
-        Auth: page.url.searchParams.get("search") || "",
-        HTTPS: page.url.searchParams.get("search") || "",
-        CORS: page.url.searchParams.get("search") || "",
+        Category: page.url.searchParams.get("Category") || "",
+        Auth: page.url.searchParams.get("Auth") || "",
+        HTTPS: page.url.searchParams.get("HTTPS") || "",
+        CORS: page.url.searchParams.get("CORS") || "",
     })
 
     const fuse = new Fuse(apis, {
