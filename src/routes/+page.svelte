@@ -63,7 +63,7 @@
                 Number(searchOptions.page) * Number(searchOptions.pageSize),
             )
 
-            Object.entries(searchOptions).forEach(([key]) => {
+            page.url.searchParams.keys().forEach((key) => {
                 page.url.searchParams.delete(key)
             })
             Object.entries(searchOptions).forEach(([key, value]) => {
