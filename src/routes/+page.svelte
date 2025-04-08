@@ -68,6 +68,8 @@
             })
             Object.entries(searchOptions).forEach(([key, value]) => {
                 if (!value) return
+                if (key === "page" && value === "1") return
+                if (key === "pageSize" && value === "10") return
                 page.url.searchParams.set(key, value)
             })
 
