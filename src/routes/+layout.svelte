@@ -1,13 +1,8 @@
 <script lang="ts">
     import "$lib/app.css"
     import recursiveMonoUrl from "@fontsource-variable/recursive/files/recursive-latin-mono-normal.woff2?url"
-    import { type Snippet } from "svelte"
 
-    let {
-        children,
-    }: {
-        children: Snippet
-    } = $props()
+    let { children } = $props()
 </script>
 
 <svelte:head>
@@ -30,7 +25,7 @@
     </style>`}
 </svelte:head>
 
-<main class="container pb-16 pt-8">
+<main class="container pt-8 pb-16">
     {@render children()}
 </main>
 

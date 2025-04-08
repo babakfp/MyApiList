@@ -1,16 +1,12 @@
 <script lang="ts">
     import type { Api } from "$lib/db"
 
-    let {
-        api,
-    }: {
-        api: Api
-    } = $props()
+    const api: Api = $props()
 </script>
 
 <li>
     <a
-        class="grid gap-2 p-4 clickable"
+        class="grid gap-2 border-2 border-gray-800 p-4 hover:border-gray-700"
         href={api.url}
         target="_blank"
         rel="noopener noreferrer nofollow"

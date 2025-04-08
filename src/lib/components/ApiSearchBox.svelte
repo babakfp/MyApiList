@@ -6,17 +6,21 @@
     }: {
         value?: string
     } = $props()
+
+    const id = $props.id()
 </script>
 
 <div class="group relative flex-1">
     <input
-        class="peer h-12 w-full bg-transparent pl-4 pr-[calc(theme(spacing.12)-theme(spacing.1))] placeholder-gray-600 reset-search-input writable"
+        name={id}
+        class="peer reset-search-input h-12 w-full border-2 border-gray-800 bg-transparent pr-[calc(theme(spacing.12)-theme(spacing.1))] pl-4 placeholder-gray-600 hover:border-gray-700"
         type="search"
         placeholder="Search APIs"
         bind:value
+        autocomplete="off"
     />
     <button
-        class="absolute right-0.5 flex h-[calc(theme(spacing.12)-theme(spacing.1))] w-[calc(theme(spacing.12)-theme(spacing.1))] items-center justify-center text-gray-600 hide inset-y-center hover:text-gray-100 peer-[:not(:placeholder-shown)]:show"
+        class="hide inset-y-center peer-[:not(:placeholder-shown)]:show absolute right-0.5 flex h-[calc(theme(spacing.12)-theme(spacing.1))] w-[calc(theme(spacing.12)-theme(spacing.1))] items-center justify-center text-gray-600 hover:text-gray-100"
         aria-label="Clear search"
         onclick={() => (value = "")}
     >
