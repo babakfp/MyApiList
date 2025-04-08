@@ -18,7 +18,7 @@
     let searchOptions = $state({
         search: page.url.searchParams.get("search") || "",
         page: page.url.searchParams.get("page") || "1",
-        pageSize: page.url.searchParams.get("pageSize") || "10",
+        pageSize: page.url.searchParams.get("pageSize") || "20",
         Category: page.url.searchParams.get("Category") || "",
         Auth: page.url.searchParams.get("Auth") || "",
         HTTPS: page.url.searchParams.get("HTTPS") || "",
@@ -69,7 +69,7 @@
             Object.entries(searchOptions).forEach(([key, value]) => {
                 if (!value) return
                 if (key === "page" && value === "1") return
-                if (key === "pageSize" && value === "10") return
+                if (key === "pageSize" && value === "20") return
                 page.url.searchParams.set(key, value)
             })
 
