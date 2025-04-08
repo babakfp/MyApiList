@@ -1,5 +1,5 @@
 <script lang="ts">
-    import lunr from "lunr"
+    import Fuse from "fuse.js"
     import IconCaretDownFill from "phosphor-icons-svelte/IconCaretDownFill.svelte"
     import IconCaretLeftRegular from "phosphor-icons-svelte/IconCaretLeftRegular.svelte"
     import IconCaretRightRegular from "phosphor-icons-svelte/IconCaretRightRegular.svelte"
@@ -25,11 +25,9 @@
         CORS: page.url.searchParams.get("search") || "",
     })
 
-    const idx = lunr(function () {
-        this.ref("url")
-        this.field("name")
-        this.field("description")
-        apis.forEach((api) => this.add(api))
+    const fuse = new Fuse(apis, {
+        includeScore: true,
+        keys: ["name", "description"],
     })
 
     let apisToShow: Api[] = $state([])
@@ -46,13 +44,8 @@
             apisToShow = apis
 
             if (searchOptions.search) {
-                const foundUrls = idx
-                    .search(searchOptions.search)
-                    .map((r) => r.ref)
-                const foundApis = foundUrls
-                    .map((url) => apisToShow.find((a) => a.url === url))
-                    .filter((a) => a !== undefined)
-
+                const searchResults = fuse.search(searchOptions.search)
+                const foundApis = searchResults.map((item) => item.item)
                 apisToShow = foundApis
             }
 
