@@ -73,7 +73,11 @@
                 page.url.searchParams.set(key, value)
             })
 
-            goto(page.url.search, { keepFocus: true, noScroll: true })
+            // If searchParams are empty, page.url.search becomes "", and goto("") won't trigger navigation. Fallback to "/" to ensure the router properly processes the navigation.
+            goto(page.url.search || "/", {
+                keepFocus: true,
+                noScroll: true,
+            })
         })
 
         // dependencies
