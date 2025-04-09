@@ -71,17 +71,15 @@
 
     $effect(() => {
         untrack(() => {
-            apisToShow = apis
+            updateUrlSearchParams(searchParams)
 
+            apisToShow = apis
             if (searchParams.search) {
                 apisToShow = searchApis(searchParams.search)
             }
-
             apisToShow = filterApis(apisToShow, searchParams)
 
             pageApis = getCurrentPageApis(apisToShow, searchParams)
-
-            updateUrlSearchParams(searchParams)
         })
 
         // dependencies
