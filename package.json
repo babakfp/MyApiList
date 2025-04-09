@@ -26,6 +26,11 @@
         "ui-ingredients": "1.3.0",
         "vite": "6.2.5"
     },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "esbuild"
+        ]
+    },
     "type": "module",
     "private": true
 }
