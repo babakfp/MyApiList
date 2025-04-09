@@ -78,15 +78,15 @@
     $effect(() => {
         updateUrlSearchParams(searchParams)
 
-        let foundApis = apis
+        let newApisToShow = apis
         if (searchParams.query) {
-            foundApis = searchApis(searchParams.query)
+            newApisToShow = searchApis(searchParams.query)
         }
-        foundApis = filterApis(foundApis, searchParams)
+        newApisToShow = filterApis(newApisToShow, searchParams)
 
         untrack(() => {
-            apisToShow = foundApis
-            pageApis = getCurrentPageApis(foundApis, searchParams)
+            apisToShow = newApisToShow
+            pageApis = getCurrentPageApis(newApisToShow, searchParams)
         })
     })
 
