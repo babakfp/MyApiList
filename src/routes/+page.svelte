@@ -58,8 +58,8 @@
             })
 
             pageApis = apisToShow.slice(
-                (Number(searchOptions.page) - 1) *
-                    Number(searchOptions.pageSize),
+                (Number(searchOptions.page) - 1)
+                    * Number(searchOptions.pageSize),
                 Number(searchOptions.page) * Number(searchOptions.pageSize),
             )
 
