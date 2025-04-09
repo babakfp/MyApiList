@@ -53,6 +53,10 @@
         })
     }
 
+    const searchApis = (query: string) => {
+        return fuse.search(query).map((item) => item.item)
+    }
+
     $effect(() => {
         untrack(() => {
             if (searchParams.page !== searchParamsPrev.page) {
@@ -62,9 +66,7 @@
             apisToShow = apis
 
             if (searchParams.search) {
-                const searchResults = fuse.search(searchParams.search)
-                const foundApis = searchResults.map((item) => item.item)
-                apisToShow = foundApis
+                apisToShow = searchApis(searchParams.search)
             }
 
             apisPropsKeysValues.forEach(({ label }) => {
