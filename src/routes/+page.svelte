@@ -75,18 +75,23 @@
         return apis.slice((page - 1) * pageSize, page * pageSize)
     }
 
+    const findApis = (apis: Api[], params: typeof searchParams) => {
+        let foundApis = apis
+        if (params.query) {
+            foundApis = searchApis(params.query)
+        }
+        foundApis = filterApis(foundApis, params)
+        return foundApis
+    }
+
     $effect(() => {
         updateUrlSearchParams(searchParams)
-
-        let newApisToShow = apis
-        if (searchParams.query) {
-            newApisToShow = searchApis(searchParams.query)
-        }
-        newApisToShow = filterApis(newApisToShow, searchParams)
+        const newApisToShow = findApis(apis, searchParams)
+        const newPageApis = getCurrentPageApis(newApisToShow, searchParams)
 
         untrack(() => {
             apisToShow = newApisToShow
-            pageApis = getCurrentPageApis(newApisToShow, searchParams)
+            pageApis = newPageApis
         })
     })
 
