@@ -33,14 +33,18 @@
     <ul class="container list-inside list-disc space-y-2 text-sm">
         <li>
             Made by
-            <a class="underline" href="https://babakfp.ir" target="_blank">
+            <a
+                class="underline focus-visible:text-yellow-500"
+                href="https://babakfp.ir"
+                target="_blank"
+            >
                 Babak
             </a>
         </li>
         <li>
             Source code on
             <a
-                class="underline"
+                class="underline focus-visible:text-yellow-500"
                 href="https://github.com/babakfp/MyApiList"
                 target="_blank"
             >
@@ -49,7 +53,11 @@
         </li>
         <li>
             Favicon by
-            <a class="underline" href="https://flaticon.com" target="_blank">
+            <a
+                class="underline focus-visible:text-yellow-500"
+                href="https://flaticon.com"
+                target="_blank"
+            >
                 FlatIcon
             </a>
         </li>

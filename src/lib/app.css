@@ -49,22 +49,3 @@
         @apply h-0 w-0;
     }
 }
-
-@layer base {
-    a[href]:not([tabindex="-1"]),
-    area[href]:not([tabindex="-1"]),
-    input:not([disabled]):not([tabindex="-1"]),
-    select:not([disabled]):not([tabindex="-1"]),
-    textarea:not([disabled]):not([tabindex="-1"]),
-    button:not([disabled]):not([tabindex="-1"]),
-    iframe:not([tabindex="-1"]),
-    [tabindex]:not([tabindex="-1"]),
-    [contentEditable="true"]:not([tabindex="-1"]) {
-        @apply focus-visible:ring-2 focus-visible:ring-teal-400;
-    }
-
-    /* NOTE: data attributes are used for Zag's state machine */
-    [data-part="item"][data-focus-visible] {
-        @apply ring-2 ring-teal-400;
-    }
-}

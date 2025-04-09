@@ -109,7 +109,7 @@
             <ApiSearchBox bind:value={searchParams.query} />
 
             <button
-                class="flex size-12 items-center justify-center border-2 border-gray-800 text-gray-600 hover:border-gray-700 lg:hidden"
+                class="flex size-12 items-center justify-center border-2 border-gray-800 hover:border-gray-700 focus-visible:border-yellow-500 lg:hidden"
                 aria-label="Open advanced search"
                 onclick={() => (isAdvancedSearchOpen = !isAdvancedSearchOpen)}
             >
@@ -131,7 +131,7 @@
                             <div class="flex gap-2">
                                 <Select.Control class="flex-1">
                                     <Select.Trigger
-                                        class="relative flex h-12 w-full flex-1 items-center justify-between border-2 border-gray-800 px-4 hover:border-gray-700 data-[state=checked]:text-gray-400"
+                                        class="relative flex h-12 w-full flex-1 items-center justify-between border-2 border-gray-800 px-4 hover:border-gray-700 focus-visible:border-yellow-500 data-[state=checked]:text-gray-400"
                                     >
                                         <span>
                                             {valueAsString || "Categories"}
@@ -143,7 +143,7 @@
                                 </Select.Control>
                                 {#if valueAsString}
                                     <button
-                                        class="flex size-12 items-center justify-center border-2 border-gray-800 text-gray-600 hover:border-gray-700"
+                                        class="flex size-12 items-center justify-center border-2 border-gray-800 hover:border-gray-700 focus-visible:border-yellow-500"
                                         onclick={() => {
                                             clearValue()
                                         }}
@@ -154,7 +154,7 @@
                             </div>
                             <Select.Positioner>
                                 <Select.Content
-                                    class="bg-background z-1 max-h-72 overflow-y-auto border-2 border-gray-800"
+                                    class="bg-background z-1 max-h-72 overflow-y-auto border-2 border-gray-800 focus-visible:border-yellow-500"
                                 >
                                     {#each categoryOptionData as item}
                                         <Select.Item
@@ -162,10 +162,10 @@
                                             class="group flex items-center gap-2 py-1.5 pr-8 pl-4 first:pt-4 last:pb-4"
                                         >
                                             <IconCheckCircleFill
-                                                class="text-xl group-[&:not([data-state=checked])]:hidden"
+                                                class="text-xl group-data-[highlighted]:text-yellow-500 group-[&:not([data-state=checked])]:hidden"
                                             />
                                             <IconCircleFill
-                                                class="text-xl text-gray-600 group-data-[state=checked]:hidden"
+                                                class="text-xl text-gray-600 group-data-[highlighted]:text-yellow-500 group-data-[state=checked]:hidden"
                                             />
                                             <Select.ItemText
                                                 class="text-sm [&:not([data-highlighted]):not([data-state=checked])]:text-gray-400"
@@ -194,7 +194,7 @@
                                     <span>{label}</span>
                                     {#if searchParams[label]}
                                         <button
-                                            class="flex text-gray-600 hover:text-gray-100"
+                                            class="flex text-gray-600 hover:text-gray-100 focus-visible:text-yellow-500"
                                             onclick={() => {
                                                 clearValue()
                                             }}
@@ -208,7 +208,7 @@
                                         <li>
                                             <RadioGroup.Item
                                                 {value}
-                                                class="flex items-center gap-2 rounded-full border-2 border-gray-800 py-1.5 pr-4 pl-2 hover:border-gray-700"
+                                                class="flex items-center gap-2 rounded-full border-2 border-gray-800 py-1.5 pr-4 pl-2 hover:border-gray-700 data-[focus]:border-yellow-500"
                                             >
                                                 <RadioGroup.ItemControl
                                                     class="group flex text-xl"
@@ -265,7 +265,7 @@
             >
                 {#snippet children({ pages, page, totalPages })}
                     <Pagination.PrevTrigger
-                        class="bg-background flex h-12 min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-25"
+                        class="bg-background flex h-12 min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 disabled:cursor-not-allowed disabled:opacity-25"
                     >
                         <IconCaretLeftRegular />
                     </Pagination.PrevTrigger>
@@ -278,7 +278,7 @@
                         {#each pages as page, index}
                             {#if page.type === "page"}
                                 <Pagination.Item
-                                    class="bg-background h-12 min-w-12 border-2 border-gray-800 px-4 hover:border-gray-700 data-[selected]:border-gray-50"
+                                    class="bg-background h-12 min-w-12 border-2 border-gray-800 px-4 hover:border-gray-700 focus-visible:border-yellow-500! focus-visible:text-yellow-500 data-[selected]:border-gray-50"
                                     value={page.value}
                                 >
                                     {page.value}
@@ -295,7 +295,7 @@
                     </div>
 
                     <Pagination.NextTrigger
-                        class="bg-background flex h-12 min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-25"
+                        class="bg-background flex h-12 min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-25"
                     >
                         <IconCaretRightRegular />
                     </Pagination.NextTrigger>
