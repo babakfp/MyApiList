@@ -16,7 +16,7 @@
     import { apis, apisPropsKeysValues, type Api } from "$lib/db"
 
     let searchParams = $state({
-        search: page.url.searchParams.get("search") || "",
+        query: page.url.searchParams.get("query") || "",
         page: page.url.searchParams.get("page") || "1",
         pageSize: page.url.searchParams.get("pageSize") || "20",
         Category: page.url.searchParams.get("Category") || "",
@@ -74,8 +74,8 @@
             updateUrlSearchParams(searchParams)
 
             apisToShow = apis
-            if (searchParams.search) {
-                apisToShow = searchApis(searchParams.search)
+            if (searchParams.query) {
+                apisToShow = searchApis(searchParams.query)
             }
             apisToShow = filterApis(apisToShow, searchParams)
 
@@ -113,7 +113,7 @@
 <div class="grid gap-8 lg:grid-cols-[auto_20rem]">
     <aside class="lg:sticky lg:top-8 lg:order-1 lg:self-start">
         <div class="flex gap-2">
-            <ApiSearchBox bind:value={searchParams.search} />
+            <ApiSearchBox bind:value={searchParams.query} />
 
             <button
                 class="flex size-12 items-center justify-center border-2 border-gray-800 text-gray-600 hover:border-gray-700 lg:hidden"
