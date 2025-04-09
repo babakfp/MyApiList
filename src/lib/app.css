@@ -25,13 +25,7 @@
     --radius-lg: initial;
     --radius: 0.5rem; /* --radius-lg */
 
-    --font-sans: "Recursive Variable";
-    --font-mono: "Recursive Variable";
-    --font-mono--font-feature-settings: "'MONO' 1";
-
-    --font-weight-thin: initial;
-    --font-weight-extralight: initial;
-    --font-weight-extrablack: 1000;
+    --font-sans: "Jost Variable";
 }
 
 @utility container {
