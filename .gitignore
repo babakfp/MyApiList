@@ -1,6 +1,5 @@
 .DS_Store
 /node_modules/
 /.svelte-kit/
-/.vercel/
-/vite.config.ts.timestamp-*
-/pnpm-lock.yaml
+/build/
+/vite.config.*.timestamp-*
