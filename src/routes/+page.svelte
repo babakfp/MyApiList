@@ -65,6 +65,12 @@
         return apis
     }
 
+    const getCurrentPageApis = (apis: Api[], params: typeof searchParams) => {
+        const page = Number(params.page)
+        const pageSize = Number(params.pageSize)
+        return apis.slice((page - 1) * pageSize, page * pageSize)
+    }
+
     $effect(() => {
         untrack(() => {
             if (searchParams.page !== searchParamsPrev.page) {
@@ -79,10 +85,7 @@
 
             apisToShow = filterApis(apisToShow, searchParams)
 
-            pageApis = apisToShow.slice(
-                (Number(searchParams.page) - 1) * Number(searchParams.pageSize),
-                Number(searchParams.page) * Number(searchParams.pageSize),
-            )
+            pageApis = getCurrentPageApis(apisToShow, searchParams)
 
             updateUrlSearchParams(searchParams)
         })
