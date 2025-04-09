@@ -35,6 +35,24 @@
 
     let searchParamsPrev = $state.snapshot(searchParams)
 
+    const updateUrlSearchParams = (params: typeof searchParams) => {
+        page.url.searchParams.keys().forEach((key) => {
+            page.url.searchParams.delete(key)
+        })
+        Object.entries(params).forEach(([key, value]) => {
+            if (!value) return
+            if (key === "page" && value === "1") return
+            if (key === "pageSize" && value === "20") return
+            page.url.searchParams.set(key, value)
+        })
+
+        // If page.url.searchParams are empty, page.url.search becomes "", and goto("") won't trigger navigation. Fallback to "/" to ensure the router properly processes the navigation.
+        goto(page.url.search || "/", {
+            keepFocus: true,
+            noScroll: true,
+        })
+    }
+
     $effect(() => {
         untrack(() => {
             if (searchParams.page !== searchParamsPrev.page) {
@@ -62,21 +80,7 @@
                 Number(searchParams.page) * Number(searchParams.pageSize),
             )
 
-            page.url.searchParams.keys().forEach((key) => {
-                page.url.searchParams.delete(key)
-            })
-            Object.entries(searchParams).forEach(([key, value]) => {
-                if (!value) return
-                if (key === "page" && value === "1") return
-                if (key === "pageSize" && value === "20") return
-                page.url.searchParams.set(key, value)
-            })
-
-            // If searchParams are empty, page.url.search becomes "", and goto("") won't trigger navigation. Fallback to "/" to ensure the router properly processes the navigation.
-            goto(page.url.search || "/", {
-                keepFocus: true,
-                noScroll: true,
-            })
+            updateUrlSearchParams(searchParams)
         })
 
         // dependencies
