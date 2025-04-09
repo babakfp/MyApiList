@@ -13,11 +13,7 @@
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
     import { apis, apisPropsKeysValues, type Api } from "$lib/db"
 
-    const url = new URL(
-        typeof window !== "undefined" ?
-            window.location.href
-        :   "https://example.com",
-    )
+    const url = new URL(window.location.href)
 
     let searchParams = $state({
         query: url.searchParams.get("query") || "",
