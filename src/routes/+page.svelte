@@ -15,14 +15,20 @@
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
     import { apis, apisPropsKeysValues, type Api } from "$lib/db"
 
+    const url = new URL(
+        typeof window !== "undefined" ?
+            window.location.href
+        :   "https://example.com",
+    )
+
     let searchParams = $state({
-        query: page.url.searchParams.get("query") || "",
-        page: page.url.searchParams.get("page") || "1",
-        pageSize: page.url.searchParams.get("pageSize") || "20",
-        Category: page.url.searchParams.get("Category") || "",
-        Auth: page.url.searchParams.get("Auth") || "",
-        HTTPS: page.url.searchParams.get("HTTPS") || "",
-        CORS: page.url.searchParams.get("CORS") || "",
+        query: url.searchParams.get("query") || "",
+        page: url.searchParams.get("page") || "1",
+        pageSize: url.searchParams.get("pageSize") || "20",
+        Category: url.searchParams.get("Category") || "",
+        Auth: url.searchParams.get("Auth") || "",
+        HTTPS: url.searchParams.get("HTTPS") || "",
+        CORS: url.searchParams.get("CORS") || "",
     })
 
     const fuse = new Fuse(apis, {
@@ -34,18 +40,18 @@
     let pageApis: Api[] = $state([])
 
     const updateUrlSearchParams = (params: typeof searchParams) => {
-        page.url.searchParams.keys().forEach((key) => {
-            page.url.searchParams.delete(key)
+        url.searchParams.keys().forEach((key) => {
+            url.searchParams.delete(key)
         })
         Object.entries(params).forEach(([key, value]) => {
             if (!value) return
             if (key === "page" && value === "1") return
             if (key === "pageSize" && value === "20") return
-            page.url.searchParams.set(key, value)
+            url.searchParams.set(key, value)
         })
 
-        // If page.url.searchParams are empty, page.url.search becomes "", and goto("") won't trigger navigation. Fallback to "/" to ensure the router properly processes the navigation.
-        goto(page.url.search || "/", {
+        // If url.searchParams are empty, url.search becomes "", and goto("") won't trigger navigation. Fallback to "/" to ensure the router properly processes the navigation.
+        goto(url.search || "/", {
             keepFocus: true,
             noScroll: true,
         })
@@ -70,20 +76,18 @@
     }
 
     $effect(() => {
+        updateUrlSearchParams(searchParams)
+
+        let foundApis = apis
+        if (searchParams.query) {
+            foundApis = searchApis(searchParams.query)
+        }
+        foundApis = filterApis(foundApis, searchParams)
+
         untrack(() => {
-            updateUrlSearchParams(searchParams)
-
-            apisToShow = apis
-            if (searchParams.query) {
-                apisToShow = searchApis(searchParams.query)
-            }
-            apisToShow = filterApis(apisToShow, searchParams)
-
-            pageApis = getCurrentPageApis(apisToShow, searchParams)
+            apisToShow = foundApis
+            pageApis = getCurrentPageApis(foundApis, searchParams)
         })
-
-        // dependencies
-        ;({ ...searchParams })
     })
 
     const pageCount = $derived(
