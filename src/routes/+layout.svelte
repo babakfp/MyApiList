@@ -5,7 +5,7 @@
     let { children } = $props()
 </script>
 
-<main class="container pt-8 pb-16">
+<main class="container pt-4 pb-16">
     {@render children()}
 </main>
 
