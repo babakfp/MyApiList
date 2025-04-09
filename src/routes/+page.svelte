@@ -7,10 +7,8 @@
     import IconCircleFill from "phosphor-icons-svelte/IconCircleFill.svelte"
     import IconGearSixFill from "phosphor-icons-svelte/IconGearSixFill.svelte"
     import IconXCircleFill from "phosphor-icons-svelte/IconXCircleFill.svelte"
-    import { untrack } from "svelte"
     import { Pagination, RadioGroup, Select } from "ui-ingredients"
     import { goto } from "$app/navigation"
-    import { page } from "$app/state"
     import ApiCard from "$lib/components/ApiCard.svelte"
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
     import { apis, apisPropsKeysValues, type Api } from "$lib/db"
@@ -35,9 +33,6 @@
         includeScore: true,
         keys: ["name", "description"],
     })
-
-    let apisToShow: Api[] = $state([])
-    let pageApis: Api[] = $state([])
 
     const updateUrlSearchParams = (params: typeof searchParams) => {
         url.searchParams.keys().forEach((key) => {
@@ -86,14 +81,12 @@
 
     $effect(() => {
         updateUrlSearchParams(searchParams)
-        const newApisToShow = findApis(apis, searchParams)
-        const newPageApis = getCurrentPageApis(newApisToShow, searchParams)
-
-        untrack(() => {
-            apisToShow = newApisToShow
-            pageApis = newPageApis
-        })
     })
+
+    const apisToShow = $derived(findApis(apis, searchParams))
+    const pageApis: Api[] = $derived(
+        getCurrentPageApis(apisToShow, searchParams),
+    )
 
     const pageCount = $derived(
         Math.ceil(apisToShow.length / Number(searchParams.pageSize)),
