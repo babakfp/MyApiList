@@ -57,6 +57,14 @@
         return fuse.search(query).map((item) => item.item)
     }
 
+    const filterApis = (apis: Api[], params: typeof searchParams) => {
+        for (const { label } of apisPropsKeysValues) {
+            if (!params[label]) continue
+            apis = apis.filter(({ props }) => props[label] === params[label])
+        }
+        return apis
+    }
+
     $effect(() => {
         untrack(() => {
             if (searchParams.page !== searchParamsPrev.page) {
@@ -69,13 +77,7 @@
                 apisToShow = searchApis(searchParams.search)
             }
 
-            apisPropsKeysValues.forEach(({ label }) => {
-                if (searchParams[label]) {
-                    apisToShow = apisToShow.filter((api) => {
-                        return api.props[label] === searchParams[label]
-                    })
-                }
-            })
+            apisToShow = filterApis(apisToShow, searchParams)
 
             pageApis = apisToShow.slice(
                 (Number(searchParams.page) - 1) * Number(searchParams.pageSize),
