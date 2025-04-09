@@ -105,141 +105,7 @@
 
 <div class="grid gap-8 lg:grid-cols-[auto_20rem]">
     <aside class="lg:sticky lg:top-8 lg:order-1 lg:self-start">
-        <div class="flex gap-2">
-            <ApiSearchBox bind:value={searchParams.query} />
-
-            <button
-                class="flex size-12 items-center justify-center border-2 border-gray-800 hover:border-gray-700 focus-visible:border-yellow-500 lg:hidden"
-                aria-label="Open advanced search"
-                onclick={() => (isAdvancedSearchOpen = !isAdvancedSearchOpen)}
-            >
-                <IconGearSixFill />
-            </button>
-        </div>
-
-        <div class="{!isAdvancedSearchOpen && 'hidden'} mt-4 lg:block">
-            <ul class="space-y-4">
-                <li>
-                    <Select.Root
-                        collection={categoryOptionCollection}
-                        defaultValue={[searchParams.Category]}
-                        onValueChange={(details) => {
-                            searchParams.Category = details.value[0]
-                        }}
-                    >
-                        {#snippet children({ valueAsString, clearValue })}
-                            <div class="flex gap-2">
-                                <Select.Control class="flex-1">
-                                    <Select.Trigger
-                                        class="relative flex h-12 w-full flex-1 items-center justify-between border-2 border-gray-800 px-4 hover:border-gray-700 focus-visible:border-yellow-500 data-[state=checked]:text-gray-400"
-                                    >
-                                        <span>
-                                            {valueAsString || "Categories"}
-                                        </span>
-                                        <IconCaretDownFill
-                                            class="text-gray-600"
-                                        />
-                                    </Select.Trigger>
-                                </Select.Control>
-                                {#if valueAsString}
-                                    <button
-                                        class="flex size-12 items-center justify-center border-2 border-gray-800 hover:border-gray-700 focus-visible:border-yellow-500"
-                                        onclick={() => {
-                                            clearValue()
-                                        }}
-                                    >
-                                        <IconXCircleFill />
-                                    </button>
-                                {/if}
-                            </div>
-                            <Select.Positioner>
-                                <Select.Content
-                                    class="bg-background z-1 max-h-72 overflow-y-auto border-2 border-gray-800 focus-visible:border-yellow-500"
-                                >
-                                    {#each categoryOptionData as item}
-                                        <Select.Item
-                                            {item}
-                                            class="group flex items-center gap-2 py-1.5 pr-8 pl-4 first:pt-4 last:pb-4"
-                                        >
-                                            <IconCheckCircleFill
-                                                class="text-xl group-data-[highlighted]:text-yellow-500 group-[&:not([data-state=checked])]:hidden"
-                                            />
-                                            <IconCircleFill
-                                                class="text-xl text-gray-600 group-data-[highlighted]:text-yellow-500 group-data-[state=checked]:hidden"
-                                            />
-                                            <Select.ItemText
-                                                class="text-sm [&:not([data-highlighted]):not([data-state=checked])]:text-gray-400"
-                                            >
-                                                {item}
-                                            </Select.ItemText>
-                                        </Select.Item>
-                                    {/each}
-                                </Select.Content>
-                            </Select.Positioner>
-                        {/snippet}
-                    </Select.Root>
-                </li>
-                {#each radioGroups as { label, values }}
-                    <li>
-                        <RadioGroup.Root
-                            defaultValue={searchParams[label]}
-                            onValueChange={(details) => {
-                                searchParams[label] = details.value || ""
-                            }}
-                        >
-                            {#snippet children({ clearValue })}
-                                <RadioGroup.Label
-                                    class="mb-2 inline-flex items-center gap-2"
-                                >
-                                    <span>{label}</span>
-                                    {#if searchParams[label]}
-                                        <button
-                                            class="flex text-gray-600 hover:text-gray-100 focus-visible:text-yellow-500"
-                                            onclick={() => {
-                                                clearValue()
-                                            }}
-                                        >
-                                            <IconXCircleFill />
-                                        </button>
-                                    {/if}
-                                </RadioGroup.Label>
-                                <ul class="flex flex-wrap gap-2">
-                                    {#each values as value}
-                                        <li>
-                                            <RadioGroup.Item
-                                                {value}
-                                                class="flex items-center gap-2 rounded-full border-2 border-gray-800 py-1.5 pr-4 pl-2 hover:border-gray-700 data-[focus]:border-yellow-500"
-                                            >
-                                                <RadioGroup.ItemControl
-                                                    class="group flex text-xl"
-                                                >
-                                                    <IconCheckCircleFill
-                                                        class="group-[&:not([data-state=checked])]:hidden"
-                                                    />
-                                                    <IconCircleFill
-                                                        class="text-gray-600 group-data-[state=checked]:hidden"
-                                                    />
-                                                </RadioGroup.ItemControl>
-                                                <RadioGroup.ItemText
-                                                    class="text-sm [&:not([data-state=checked])]:text-gray-400"
-                                                >
-                                                    {value}
-                                                </RadioGroup.ItemText>
-                                                <RadioGroup.ItemHiddenInput
-                                                    {value}
-                                                />
-                                            </RadioGroup.Item>
-                                        </li>
-                                    {/each}
-                                </ul>
-                            {/snippet}
-                        </RadioGroup.Root>
-                    </li>
-                {/each}
-            </ul>
-
-            <hr class="mt-8 lg:hidden" />
-        </div>
+        {@render SearchAndFilter()}
     </aside>
 
     <div>
@@ -304,3 +170,139 @@
         {/if}
     </div>
 </div>
+
+{#snippet SearchAndFilter()}
+    <div class="flex gap-2">
+        <ApiSearchBox bind:value={searchParams.query} />
+
+        <button
+            class="flex size-12 items-center justify-center border-2 border-gray-800 hover:border-gray-700 focus-visible:border-yellow-500 lg:hidden"
+            aria-label="Open advanced search"
+            onclick={() => (isAdvancedSearchOpen = !isAdvancedSearchOpen)}
+        >
+            <IconGearSixFill />
+        </button>
+    </div>
+
+    <div class="{!isAdvancedSearchOpen && 'hidden'} mt-4 lg:block">
+        <ul class="space-y-4">
+            <li>
+                <Select.Root
+                    collection={categoryOptionCollection}
+                    defaultValue={[searchParams.Category]}
+                    onValueChange={(details) => {
+                        searchParams.Category = details.value[0]
+                    }}
+                >
+                    {#snippet children({ valueAsString, clearValue })}
+                        <div class="flex gap-2">
+                            <Select.Control class="flex-1">
+                                <Select.Trigger
+                                    class="relative flex h-12 w-full flex-1 items-center justify-between border-2 border-gray-800 px-4 hover:border-gray-700 focus-visible:border-yellow-500 data-[state=checked]:text-gray-400"
+                                >
+                                    <span>
+                                        {valueAsString || "Categories"}
+                                    </span>
+                                    <IconCaretDownFill class="text-gray-600" />
+                                </Select.Trigger>
+                            </Select.Control>
+                            {#if valueAsString}
+                                <button
+                                    class="flex size-12 items-center justify-center border-2 border-gray-800 hover:border-gray-700 focus-visible:border-yellow-500"
+                                    onclick={() => {
+                                        clearValue()
+                                    }}
+                                >
+                                    <IconXCircleFill />
+                                </button>
+                            {/if}
+                        </div>
+                        <Select.Positioner>
+                            <Select.Content
+                                class="bg-background z-1 max-h-72 overflow-y-auto border-2 border-gray-800 focus-visible:border-yellow-500"
+                            >
+                                {#each categoryOptionData as item}
+                                    <Select.Item
+                                        {item}
+                                        class="group flex items-center gap-2 py-1.5 pr-8 pl-4 first:pt-4 last:pb-4"
+                                    >
+                                        <IconCheckCircleFill
+                                            class="text-xl group-data-[highlighted]:text-yellow-500 group-[&:not([data-state=checked])]:hidden"
+                                        />
+                                        <IconCircleFill
+                                            class="text-xl text-gray-600 group-data-[highlighted]:text-yellow-500 group-data-[state=checked]:hidden"
+                                        />
+                                        <Select.ItemText
+                                            class="text-sm [&:not([data-highlighted]):not([data-state=checked])]:text-gray-400"
+                                        >
+                                            {item}
+                                        </Select.ItemText>
+                                    </Select.Item>
+                                {/each}
+                            </Select.Content>
+                        </Select.Positioner>
+                    {/snippet}
+                </Select.Root>
+            </li>
+            {#each radioGroups as { label, values }}
+                <li>
+                    <RadioGroup.Root
+                        defaultValue={searchParams[label]}
+                        onValueChange={(details) => {
+                            searchParams[label] = details.value || ""
+                        }}
+                    >
+                        {#snippet children({ clearValue })}
+                            <RadioGroup.Label
+                                class="mb-2 inline-flex items-center gap-2"
+                            >
+                                <span>{label}</span>
+                                {#if searchParams[label]}
+                                    <button
+                                        class="flex text-gray-600 hover:text-gray-100 focus-visible:text-yellow-500"
+                                        onclick={() => {
+                                            clearValue()
+                                        }}
+                                    >
+                                        <IconXCircleFill />
+                                    </button>
+                                {/if}
+                            </RadioGroup.Label>
+                            <ul class="flex flex-wrap gap-2">
+                                {#each values as value}
+                                    <li>
+                                        <RadioGroup.Item
+                                            {value}
+                                            class="flex items-center gap-2 rounded-full border-2 border-gray-800 py-1.5 pr-4 pl-2 hover:border-gray-700 data-[focus]:border-yellow-500"
+                                        >
+                                            <RadioGroup.ItemControl
+                                                class="group flex text-xl"
+                                            >
+                                                <IconCheckCircleFill
+                                                    class="group-[&:not([data-state=checked])]:hidden"
+                                                />
+                                                <IconCircleFill
+                                                    class="text-gray-600 group-data-[state=checked]:hidden"
+                                                />
+                                            </RadioGroup.ItemControl>
+                                            <RadioGroup.ItemText
+                                                class="text-sm [&:not([data-state=checked])]:text-gray-400"
+                                            >
+                                                {value}
+                                            </RadioGroup.ItemText>
+                                            <RadioGroup.ItemHiddenInput
+                                                {value}
+                                            />
+                                        </RadioGroup.Item>
+                                    </li>
+                                {/each}
+                            </ul>
+                        {/snippet}
+                    </RadioGroup.Root>
+                </li>
+            {/each}
+        </ul>
+
+        <hr class="mt-8 lg:hidden" />
+    </div>
+{/snippet}
