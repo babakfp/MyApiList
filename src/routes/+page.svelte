@@ -33,8 +33,6 @@
     let apisToShow: Api[] = $state([])
     let pageApis: Api[] = $state([])
 
-    let searchParamsPrev = $state.snapshot(searchParams)
-
     const updateUrlSearchParams = (params: typeof searchParams) => {
         page.url.searchParams.keys().forEach((key) => {
             page.url.searchParams.delete(key)
@@ -73,10 +71,6 @@
 
     $effect(() => {
         untrack(() => {
-            if (searchParams.page !== searchParamsPrev.page) {
-                searchParamsPrev.page = searchParams.page
-            }
-
             apisToShow = apis
 
             if (searchParams.search) {
