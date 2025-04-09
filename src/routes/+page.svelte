@@ -15,7 +15,7 @@
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
     import { apis, apisPropsKeysValues, type Api } from "$lib/db"
 
-    let searchOptions = $state({
+    let searchParams = $state({
         search: page.url.searchParams.get("search") || "",
         page: page.url.searchParams.get("page") || "1",
         pageSize: page.url.searchParams.get("pageSize") || "20",
@@ -33,40 +33,39 @@
     let apisToShow: Api[] = $state([])
     let pageApis: Api[] = $state([])
 
-    let searchOptionsOldPage = searchOptions.page
+    let searchParamsPrev = $state.snapshot(searchParams)
 
     $effect(() => {
         untrack(() => {
-            if (searchOptions.page !== searchOptionsOldPage) {
-                searchOptionsOldPage = searchOptions.page
+            if (searchParams.page !== searchParamsPrev.page) {
+                searchParamsPrev.page = searchParams.page
             }
 
             apisToShow = apis
 
-            if (searchOptions.search) {
-                const searchResults = fuse.search(searchOptions.search)
+            if (searchParams.search) {
+                const searchResults = fuse.search(searchParams.search)
                 const foundApis = searchResults.map((item) => item.item)
                 apisToShow = foundApis
             }
 
             apisPropsKeysValues.forEach(({ label }) => {
-                if (searchOptions[label]) {
+                if (searchParams[label]) {
                     apisToShow = apisToShow.filter((api) => {
-                        return api.props[label] === searchOptions[label]
+                        return api.props[label] === searchParams[label]
                     })
                 }
             })
 
             pageApis = apisToShow.slice(
-                (Number(searchOptions.page) - 1)
-                    * Number(searchOptions.pageSize),
-                Number(searchOptions.page) * Number(searchOptions.pageSize),
+                (Number(searchParams.page) - 1) * Number(searchParams.pageSize),
+                Number(searchParams.page) * Number(searchParams.pageSize),
             )
 
             page.url.searchParams.keys().forEach((key) => {
                 page.url.searchParams.delete(key)
             })
-            Object.entries(searchOptions).forEach(([key, value]) => {
+            Object.entries(searchParams).forEach(([key, value]) => {
                 if (!value) return
                 if (key === "page" && value === "1") return
                 if (key === "pageSize" && value === "20") return
@@ -81,11 +80,11 @@
         })
 
         // dependencies
-        ;({ ...searchOptions })
+        ;({ ...searchParams })
     })
 
     const pageCount = $derived(
-        Math.ceil(apisToShow.length / Number(searchOptions.pageSize)),
+        Math.ceil(apisToShow.length / Number(searchParams.pageSize)),
     )
 
     let isAdvancedSearchOpen = $state(false)
@@ -111,7 +110,7 @@
 <div class="grid gap-8 lg:grid-cols-[auto_20rem]">
     <aside class="lg:sticky lg:top-8 lg:order-1 lg:self-start">
         <div class="flex gap-2">
-            <ApiSearchBox bind:value={searchOptions.search} />
+            <ApiSearchBox bind:value={searchParams.search} />
 
             <button
                 class="flex size-12 items-center justify-center border-2 border-gray-800 text-gray-600 hover:border-gray-700 lg:hidden"
@@ -127,9 +126,9 @@
                 <li>
                     <Select.Root
                         collection={categoryOptionCollection}
-                        defaultValue={[searchOptions.Category]}
+                        defaultValue={[searchParams.Category]}
                         onValueChange={(details) => {
-                            searchOptions.Category = details.value[0]
+                            searchParams.Category = details.value[0]
                         }}
                     >
                         {#snippet children({ valueAsString, clearValue })}
@@ -187,9 +186,9 @@
                 {#each radioGroups as { label, values }}
                     <li>
                         <RadioGroup.Root
-                            defaultValue={searchOptions[label]}
+                            defaultValue={searchParams[label]}
                             onValueChange={(details) => {
-                                searchOptions[label] = details.value || ""
+                                searchParams[label] = details.value || ""
                             }}
                         >
                             {#snippet children({ clearValue })}
@@ -197,7 +196,7 @@
                                     class="mb-2 inline-flex items-center gap-2"
                                 >
                                     <span>{label}</span>
-                                    {#if searchOptions[label]}
+                                    {#if searchParams[label]}
                                         <button
                                             class="flex text-gray-600 hover:text-gray-100"
                                             onclick={() => {
@@ -261,10 +260,10 @@
         {#if apisToShow.length}
             <Pagination.Root
                 class="bg-background sticky bottom-0 mt-8 flex justify-between gap-4"
-                defaultPage={Number(searchOptions.page)}
-                defaultPageSize={Number(searchOptions.pageSize)}
+                defaultPage={Number(searchParams.page)}
+                defaultPageSize={Number(searchParams.pageSize)}
                 onPageChange={(page) => {
-                    searchOptions.page = String(page.page)
+                    searchParams.page = String(page.page)
                 }}
                 count={pageCount}
             >
