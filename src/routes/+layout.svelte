@@ -5,8 +5,6 @@
     let { children } = $props()
 </script>
 
-<main class="container pt-8 pb-16">
-    {@render children()}
-</main>
+{@render children()}
 
 <Footer />

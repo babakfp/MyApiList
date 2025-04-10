@@ -105,10 +105,10 @@
     })
 </script>
 
-<div class="grid gap-8 lg:grid-cols-[auto_20rem]">
+<div class="container grid gap-8 pt-8 pb-16 lg:grid-cols-[auto_20rem]">
     {@render Aside({ Search })}
 
-    <div>
+    <main>
         {#if pageApis.length}
             <ul class="space-y-4">
                 {#each pageApis as api}
@@ -173,7 +173,7 @@
                 </Pagination.Root>
             </div>
         {/if}
-    </div>
+    </main>
 </div>
 
 {#snippet Aside({ Search }: { Search: Snippet })}
