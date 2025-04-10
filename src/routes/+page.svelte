@@ -7,7 +7,7 @@
     import IconCircleFill from "phosphor-icons-svelte/IconCircleFill.svelte"
     import IconGearSixFill from "phosphor-icons-svelte/IconGearSixFill.svelte"
     import IconXCircleFill from "phosphor-icons-svelte/IconXCircleFill.svelte"
-    import type { Snippet } from "svelte"
+    import { type Snippet } from "svelte"
     import { Collapsible } from "ui-ingredients/collapsible"
     import { Pagination } from "ui-ingredients/pagination"
     import { RadioGroup } from "ui-ingredients/radio-group"
@@ -92,6 +92,11 @@
         Math.ceil(apisToShow.length / Number(searchParams.pageSize)),
     )
 
+    $effect(() => {
+        searchParams.page = "1"
+        const _dependency = apisToShow.length
+    })
+
     const radioGroups = apisPropsKeysValues.filter(
         ({ label }) => label !== "Category",
     )
@@ -126,7 +131,7 @@
                 ></div>
                 <Pagination.Root
                     class="bg-background -mb-4 flex justify-between gap-4 pb-4 lg:-mb-8 lg:pb-8"
-                    defaultPage={Number(searchParams.page)}
+                    page={Number(searchParams.page)}
                     defaultPageSize={Number(searchParams.pageSize)}
                     onPageChange={(page) => {
                         searchParams.page = String(page.page)
