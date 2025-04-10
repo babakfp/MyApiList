@@ -19,7 +19,8 @@
 
     const url = new URL(window.location.href)
 
-    let searchParams = $state({
+    type Filters = typeof filters
+    let filters = $state({
         query: url.searchParams.get("query") || "",
         page: url.searchParams.get("page") || "1",
         pageSize: url.searchParams.get("pageSize") || "20",
@@ -34,11 +35,11 @@
         keys: [{ name: "name", weight: 1.1 }, "description"],
     })
 
-    const updateUrlSearchParams = (params: typeof searchParams) => {
+    const updateSearchParams = (filters: Filters) => {
         url.searchParams.keys().forEach((key) => {
             url.searchParams.delete(key)
         })
-        Object.entries(params).forEach(([key, value]) => {
+        Object.entries(filters).forEach(([key, value]) => {
             if (!value) return
             if (key === "page" && value === "1") return
             if (key === "pageSize" && value === "20") return
@@ -53,43 +54,41 @@
         return fuse.search(query).map((item) => item.item)
     }
 
-    const filterApis = (apis: Api[], params: typeof searchParams) => {
+    const filterApis = (apis: Api[], filters: Filters) => {
         for (const { label } of apisPropsKeysValues) {
-            if (!params[label]) continue
-            apis = apis.filter(({ props }) => props[label] === params[label])
+            if (!filters[label]) continue
+            apis = apis.filter(({ props }) => props[label] === filters[label])
         }
         return apis
     }
 
-    const getCurrentPageApis = (apis: Api[], params: typeof searchParams) => {
-        const page = Number(params.page)
-        const pageSize = Number(params.pageSize)
+    const getCurrentPageApis = (apis: Api[], filters: Filters) => {
+        const page = Number(filters.page)
+        const pageSize = Number(filters.pageSize)
         return apis.slice((page - 1) * pageSize, page * pageSize)
     }
 
-    const findApis = (apis: Api[], params: typeof searchParams) => {
+    const findApis = (apis: Api[], filters: Filters) => {
         let foundApis = apis
-        if (params.query) {
-            foundApis = searchApis(params.query)
+        if (filters.query) {
+            foundApis = searchApis(filters.query)
         }
-        return filterApis(foundApis, params)
+        return filterApis(foundApis, filters)
     }
 
     $effect(() => {
-        updateUrlSearchParams(searchParams)
+        updateSearchParams(filters)
     })
 
-    const apisToShow = $derived(findApis(apis, searchParams))
-    const pageApis: Api[] = $derived(
-        getCurrentPageApis(apisToShow, searchParams),
-    )
+    const apisToShow = $derived(findApis(apis, filters))
+    const pageApis: Api[] = $derived(getCurrentPageApis(apisToShow, filters))
 
     const pageCount = $derived(
-        Math.ceil(apisToShow.length / Number(searchParams.pageSize)),
+        Math.ceil(apisToShow.length / Number(filters.pageSize)),
     )
 
     $effect(() => {
-        searchParams.page = "1"
+        filters.page = "1"
         const _dependency = apisToShow.length
     })
 
@@ -127,10 +126,10 @@
                 ></div>
                 <Pagination.Root
                     class="bg-background -mb-4 flex justify-between gap-4 pb-4 lg:-mb-8 lg:pb-8"
-                    page={Number(searchParams.page)}
-                    defaultPageSize={Number(searchParams.pageSize)}
+                    page={Number(filters.page)}
+                    defaultPageSize={Number(filters.pageSize)}
                     onPageChange={(page) => {
-                        searchParams.page = String(page.page)
+                        filters.page = String(page.page)
                     }}
                     count={pageCount}
                 >
@@ -206,16 +205,16 @@
 {/snippet}
 
 {#snippet Search()}
-    <ApiSearchBox bind:value={searchParams.query} />
+    <ApiSearchBox bind:value={filters.query} />
 {/snippet}
 
 {#snippet Filters()}
     <div class="space-y-4">
         <Select.Root
             collection={categoryOptionCollection}
-            defaultValue={[searchParams.Category]}
+            defaultValue={[filters.Category]}
             onValueChange={(details) => {
-                searchParams.Category = details.value[0]
+                filters.Category = details.value[0]
             }}
         >
             {#snippet children(context)}
@@ -268,9 +267,9 @@
 
         {#each radioGroups as { label, values }}
             <RadioGroup.Root
-                defaultValue={searchParams[label]}
+                defaultValue={filters[label]}
                 onValueChange={(details) => {
-                    searchParams[label] = details.value || ""
+                    filters[label] = details.value || ""
                 }}
             >
                 {#snippet children(context)}
