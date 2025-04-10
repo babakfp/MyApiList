@@ -14,7 +14,7 @@
         <h3 class="font-bold">{api.name}</h3>
         <p class="text-sm text-gray-400">{api.description}</p>
         <ul class="mt-4 flex flex-wrap gap-4">
-            {#each Object.entries(api.props) as [k, v]}
+            {#each Object.entries(api.metadata) as [k, v]}
                 <li class="text-xs text-gray-600">
                     {#if k === "Category"}
                         {v}
