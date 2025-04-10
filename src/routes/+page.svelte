@@ -92,7 +92,9 @@
         const _dependency = apisToShow.length
     })
 
-    const radioGroups = apiMetadata.filter(({ label }) => label !== "Category")
+    const radioGroupMetadatas = apiMetadata.filter(
+        ({ label }) => label !== "Category",
+    )
 
     const categoryOptionData = apiMetadata.find(({ label }) =>
         label.includes("Category"),
@@ -263,7 +265,7 @@
             {/snippet}
         </Select.Root>
 
-        {#each radioGroups as { label, values }}
+        {#each radioGroupMetadatas as { label, values }}
             <RadioGroup.Root
                 defaultValue={filters[label]}
                 onValueChange={(details) => {
