@@ -1,5 +1,5 @@
 import { unique } from "remeda"
-import publicApis from "$lib/db/public-apis.json"
+import db from "$lib/db/db.json"
 
 export type Api = {
     name: string
@@ -8,7 +8,7 @@ export type Api = {
     props: Record<string, string>
 }
 
-export const apis: Api[] = publicApis.filter((a) => !a.hidden)
+export const apis: Api[] = db
 
 export const apisProps = apis.map((a) => a.props)
 export const apisPropsKeys = unique(apisProps.flatMap((a) => Object.keys(a)))
