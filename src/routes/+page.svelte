@@ -245,17 +245,15 @@
                         {#each categoryOptionData as item}
                             <Select.Item
                                 {item}
-                                class="group flex items-center gap-2 py-1.5 pr-8 pl-4 first:pt-4 last:pb-4"
+                                class="group flex items-center gap-2 py-1.5 pr-8 pl-4 not-data-[state=checked]:text-gray-400 first:pt-4 last:pb-4 data-[highlighted]:text-yellow-500"
                             >
                                 <IconCheckCircleFill
-                                    class="text-xl group-not-data-[state=checked]:hidden group-data-[highlighted]:text-yellow-500"
+                                    class="text-xl group-not-data-[state=checked]:hidden"
                                 />
                                 <IconCircleFill
-                                    class="text-xl text-gray-600 group-data-[highlighted]:text-yellow-500 group-data-[state=checked]:hidden"
+                                    class="text-xl group-data-[state=checked]:hidden"
                                 />
-                                <Select.ItemText
-                                    class="text-sm not-data-[highlighted]:not-data-[state=checked]:text-gray-400"
-                                >
+                                <Select.ItemText class="text-sm">
                                     {item}
                                 </Select.ItemText>
                             </Select.Item>
