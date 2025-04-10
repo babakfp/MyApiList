@@ -96,9 +96,9 @@
         ({ label }) => label !== "Category",
     )
 
-    const categoryOptionData = apiMetadata.find(({ label }) =>
-        label.includes("Category"),
-    )!.values
+    const categoryOptionData = apiMetadata
+        .filter(({ label }) => label.includes("Category"))
+        .flatMap(({ values }) => values)
 
     const categoryOptionCollection = Select.collection({
         items: categoryOptionData,
