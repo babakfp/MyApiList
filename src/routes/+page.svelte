@@ -31,7 +31,7 @@
 
     const fuse = new Fuse(apis, {
         includeScore: true,
-        keys: ["name", "description"],
+        keys: [{ name: "name", weight: 1.1 }, "description"],
     })
 
     const updateUrlSearchParams = (params: typeof searchParams) => {
