@@ -9,7 +9,7 @@ export type API = {
 
 export const apis: API[] = db
 
-export const apisProps = (() => {
+export const apiProps = (() => {
     const props = apis.map((p) => p.props)
     const labels = [...new Set(props.flatMap((p) => Object.keys(p)))] as (
         | "Category"
