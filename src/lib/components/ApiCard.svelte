@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type { Api } from "$lib/db"
+    import type { API } from "$lib/db"
 
-    const api: Api = $props()
+    const api: API = $props()
 </script>
 
 <li>

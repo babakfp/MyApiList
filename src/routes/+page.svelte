@@ -15,7 +15,7 @@
     import { goto } from "$app/navigation"
     import ApiCard from "$lib/components/ApiCard.svelte"
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
-    import { apis, apisPropsKeysValues, type Api } from "$lib/db"
+    import { apis, apisPropsKeysValues, type API } from "$lib/db"
 
     const url = new URL(window.location.href)
 
@@ -54,7 +54,7 @@
         return fuse.search(query).map((item) => item.item)
     }
 
-    const filterApis = (apis: Api[], filters: Filters) => {
+    const filterApis = (apis: API[], filters: Filters) => {
         for (const { label } of apisPropsKeysValues) {
             if (!filters[label]) continue
             apis = apis.filter(({ props }) => props[label] === filters[label])
@@ -62,13 +62,13 @@
         return apis
     }
 
-    const getCurrentPageApis = (apis: Api[], filters: Filters) => {
+    const getCurrentPageApis = (apis: API[], filters: Filters) => {
         const page = Number(filters.page)
         const pageSize = Number(filters.pageSize)
         return apis.slice((page - 1) * pageSize, page * pageSize)
     }
 
-    const findApis = (apis: Api[], filters: Filters) => {
+    const findApis = (apis: API[], filters: Filters) => {
         let foundApis = apis
         if (filters.query) {
             foundApis = searchApis(filters.query)
@@ -81,7 +81,7 @@
     })
 
     const apisToShow = $derived(findApis(apis, filters))
-    const pageApis: Api[] = $derived(getCurrentPageApis(apisToShow, filters))
+    const pageApis: API[] = $derived(getCurrentPageApis(apisToShow, filters))
 
     const pageCount = $derived(
         Math.ceil(apisToShow.length / Number(filters.pageSize)),
