@@ -12,13 +12,12 @@ type MetadataLabel = "Category" | "Auth" | "HTTPS" | "CORS"
 export const apis: API[] = db
 
 export const apiMetadata = (() => {
-    const metadata = apis.map((p) => p.metadata)
     const labels = [
-        ...new Set(metadata.flatMap((p) => Object.keys(p))),
+        ...new Set(apis.flatMap((p) => Object.keys(p.metadata))),
     ] as MetadataLabel[]
     const result = labels.map((label) => ({
         label,
-        values: [...new Set(metadata.map((p) => p[label]))],
+        values: [...new Set(apis.map((p) => p.metadata[label]))],
     }))
     return result
 })()
