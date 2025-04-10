@@ -75,8 +75,7 @@
         if (params.query) {
             foundApis = searchApis(params.query)
         }
-        foundApis = filterApis(foundApis, params)
-        return foundApis
+        return filterApis(foundApis, params)
     }
 
     $effect(() => {
