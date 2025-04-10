@@ -16,9 +16,9 @@ export const apiMetadata = (() => {
     const labels = [
         ...new Set(metadata.flatMap((p) => Object.keys(p))),
     ] as MetadataLabel[]
-    const arrayOfProps = labels.map((label) => ({
+    const result = labels.map((label) => ({
         label,
         values: [...new Set(metadata.map((p) => p[label]))],
     }))
-    return arrayOfProps
+    return result
 })()
