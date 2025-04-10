@@ -117,53 +117,58 @@
         {/if}
 
         {#if apisToShow.length}
-            <Pagination.Root
-                class="bg-background sticky bottom-0 mt-8 flex justify-between gap-4"
-                defaultPage={Number(searchParams.page)}
-                defaultPageSize={Number(searchParams.pageSize)}
-                onPageChange={(page) => {
-                    searchParams.page = String(page.page)
-                }}
-                count={pageCount}
-            >
-                {#snippet children({ pages, page, totalPages })}
-                    <Pagination.PrevTrigger
-                        class="bg-background flex h-12 w-full min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 disabled:cursor-not-allowed disabled:opacity-25"
-                    >
-                        <IconCaretLeftRegular />
-                    </Pagination.PrevTrigger>
+            <div class="sticky bottom-0">
+                <div
+                    class="to-background mt-4 h-4 bg-gradient-to-b from-transparent"
+                ></div>
+                <Pagination.Root
+                    class="bg-background -mb-4 flex justify-between gap-4 pb-4 lg:-mb-8 lg:pb-8"
+                    defaultPage={Number(searchParams.page)}
+                    defaultPageSize={Number(searchParams.pageSize)}
+                    onPageChange={(page) => {
+                        searchParams.page = String(page.page)
+                    }}
+                    count={pageCount}
+                >
+                    {#snippet children({ pages, page, totalPages })}
+                        <Pagination.PrevTrigger
+                            class="bg-background flex h-12 w-full min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 disabled:cursor-not-allowed disabled:opacity-25"
+                        >
+                            <IconCaretLeftRegular />
+                        </Pagination.PrevTrigger>
 
-                    <div class="flex items-center px-8 lg:hidden">
-                        {page}/{totalPages}
-                    </div>
+                        <div class="flex items-center px-8 lg:hidden">
+                            {page}/{totalPages}
+                        </div>
 
-                    <div class="hidden lg:flex lg:gap-2">
-                        {#each pages as page, index}
-                            {#if page.type === "page"}
-                                <Pagination.Item
-                                    class="bg-background h-12 min-w-12 border-2 border-gray-800 px-4 hover:border-gray-700 focus-visible:border-yellow-500! focus-visible:text-yellow-500 data-[selected]:border-gray-50"
-                                    value={page.value}
-                                >
-                                    {page.value}
-                                </Pagination.Item>
-                            {:else}
-                                <Pagination.Ellipsis
-                                    class="bg-background flex h-12 min-w-12 items-center justify-center px-4"
-                                    {index}
-                                >
-                                    ...
-                                </Pagination.Ellipsis>
-                            {/if}
-                        {/each}
-                    </div>
+                        <div class="hidden lg:flex lg:gap-2">
+                            {#each pages as page, index}
+                                {#if page.type === "page"}
+                                    <Pagination.Item
+                                        class="bg-background h-12 min-w-12 border-2 border-gray-800 px-4 hover:border-gray-700 focus-visible:border-yellow-500! focus-visible:text-yellow-500 data-[selected]:border-gray-50"
+                                        value={page.value}
+                                    >
+                                        {page.value}
+                                    </Pagination.Item>
+                                {:else}
+                                    <Pagination.Ellipsis
+                                        class="bg-background flex h-12 min-w-12 items-center justify-center px-4"
+                                        {index}
+                                    >
+                                        ...
+                                    </Pagination.Ellipsis>
+                                {/if}
+                            {/each}
+                        </div>
 
-                    <Pagination.NextTrigger
-                        class="bg-background flex h-12 w-full min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-25"
-                    >
-                        <IconCaretRightRegular />
-                    </Pagination.NextTrigger>
-                {/snippet}
-            </Pagination.Root>
+                        <Pagination.NextTrigger
+                            class="bg-background flex h-12 w-full min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-25"
+                        >
+                            <IconCaretRightRegular />
+                        </Pagination.NextTrigger>
+                    {/snippet}
+                </Pagination.Root>
+            </div>
         {/if}
     </div>
 </div>
