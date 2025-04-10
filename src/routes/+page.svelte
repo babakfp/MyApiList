@@ -15,7 +15,7 @@
     import { goto } from "$app/navigation"
     import ApiCard from "$lib/components/ApiCard.svelte"
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
-    import { apis, apisPropsKeysValues, type API } from "$lib/db"
+    import { apiProps, apis, type API } from "$lib/db"
 
     const url = new URL(window.location.href)
 
@@ -55,7 +55,7 @@
     }
 
     const filterApis = (apis: API[], filters: Filters) => {
-        for (const { label } of apisPropsKeysValues) {
+        for (const { label } of apiProps) {
             if (!filters[label]) continue
             apis = apis.filter(({ props }) => props[label] === filters[label])
         }
@@ -92,11 +92,9 @@
         const _dependency = apisToShow.length
     })
 
-    const radioGroups = apisPropsKeysValues.filter(
-        ({ label }) => label !== "Category",
-    )
+    const radioGroups = apiProps.filter(({ label }) => label !== "Category")
 
-    const categoryOptionData = apisPropsKeysValues.find(({ label }) =>
+    const categoryOptionData = apiProps.find(({ label }) =>
         label.includes("Category"),
     )!.values
 

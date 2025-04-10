@@ -1,4 +1,3 @@
-import { unique } from "remeda"
 import db from "$lib/db/db.json"
 
 export type API = {
@@ -10,9 +9,17 @@ export type API = {
 
 export const apis: API[] = db
 
-const apisProps = apis.map((a) => a.props)
-const apisPropsKeys = unique(apisProps.flatMap((a) => Object.keys(a)))
-export const apisPropsKeysValues = apisPropsKeys.map((p) => ({
-    label: p as "Category" | "Auth" | "HTTPS" | "CORS",
-    values: unique(apisProps.map((a) => a[p])),
-}))
+export const apisProps = (() => {
+    const props = apis.map((p) => p.props)
+    const labels = [...new Set(props.flatMap((p) => Object.keys(p)))] as (
+        | "Category"
+        | "Auth"
+        | "HTTPS"
+        | "CORS"
+    )[]
+    const arrayOfProps = labels.map((label) => ({
+        label,
+        values: [...new Set(props.map((p) => p[label]))],
+    }))
+    return arrayOfProps
+})()
