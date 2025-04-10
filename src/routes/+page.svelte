@@ -46,10 +46,7 @@
         })
 
         // If url.searchParams are empty, url.search becomes "", and goto("") won't trigger navigation. Fallback to "/" to ensure the router properly processes the navigation.
-        goto(url.search || "/", {
-            keepFocus: true,
-            noScroll: true,
-        })
+        goto(url.search || "/", { keepFocus: true, noScroll: true })
     }
 
     const searchApis = (query: string) => {
