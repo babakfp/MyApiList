@@ -8,7 +8,10 @@
     import IconGearSixFill from "phosphor-icons-svelte/IconGearSixFill.svelte"
     import IconXCircleFill from "phosphor-icons-svelte/IconXCircleFill.svelte"
     import type { Snippet } from "svelte"
-    import { Collapsible, Pagination, RadioGroup, Select } from "ui-ingredients"
+    import { Collapsible } from "ui-ingredients/collapsible"
+    import { Pagination } from "ui-ingredients/pagination"
+    import { RadioGroup } from "ui-ingredients/radio-group"
+    import { Select } from "ui-ingredients/select"
     import { goto } from "$app/navigation"
     import ApiCard from "$lib/components/ApiCard.svelte"
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
@@ -214,24 +217,22 @@
                 searchParams.Category = details.value[0]
             }}
         >
-            {#snippet children({ valueAsString, clearValue })}
+            {#snippet children(context)}
                 <div class="flex gap-2">
                     <Select.Control class="flex-1">
                         <Select.Trigger
                             class="relative flex h-12 w-full flex-1 items-center justify-between border-2 border-gray-800 px-4 hover:border-gray-700 focus-visible:border-yellow-500 data-[state=checked]:text-gray-400"
                         >
                             <span>
-                                {valueAsString || "Categories"}
+                                {context.valueAsString || "Categories"}
                             </span>
                             <IconCaretDownFill class="text-gray-600" />
                         </Select.Trigger>
                     </Select.Control>
-                    {#if valueAsString}
+                    {#if context.valueAsString}
                         <button
                             class="flex size-12 items-center justify-center border-2 border-gray-800 hover:border-gray-700 focus-visible:border-yellow-500"
-                            onclick={() => {
-                                clearValue()
-                            }}
+                            onclick={() => context.clearValue()}
                         >
                             <IconXCircleFill />
                         </button>
@@ -247,13 +248,13 @@
                                 class="group flex items-center gap-2 py-1.5 pr-8 pl-4 first:pt-4 last:pb-4"
                             >
                                 <IconCheckCircleFill
-                                    class="text-xl group-data-[highlighted]:text-yellow-500 group-[&:not([data-state=checked])]:hidden"
+                                    class="text-xl group-not-data-[state=checked]:hidden group-data-[highlighted]:text-yellow-500"
                                 />
                                 <IconCircleFill
                                     class="text-xl text-gray-600 group-data-[highlighted]:text-yellow-500 group-data-[state=checked]:hidden"
                                 />
                                 <Select.ItemText
-                                    class="text-sm [&:not([data-highlighted]):not([data-state=checked])]:text-gray-400"
+                                    class="text-sm not-data-[highlighted]:not-data-[state=checked]:text-gray-400"
                                 >
                                     {item}
                                 </Select.ItemText>
@@ -271,17 +272,15 @@
                     searchParams[label] = details.value || ""
                 }}
             >
-                {#snippet children({ clearValue })}
+                {#snippet children(context)}
                     <RadioGroup.Label
                         class="mb-2 inline-flex items-center gap-2"
                     >
                         <span>{label}</span>
-                        {#if searchParams[label]}
+                        {#if context.value}
                             <button
                                 class="flex text-gray-600 hover:text-gray-100 focus-visible:text-yellow-500"
-                                onclick={() => {
-                                    clearValue()
-                                }}
+                                onclick={() => context.clearValue()}
                             >
                                 <IconXCircleFill />
                             </button>
@@ -298,14 +297,14 @@
                                         class="group flex text-xl"
                                     >
                                         <IconCheckCircleFill
-                                            class="group-[&:not([data-state=checked])]:hidden"
+                                            class="group-not-data-[state=checked]:hidden"
                                         />
                                         <IconCircleFill
                                             class="text-gray-600 group-data-[state=checked]:hidden"
                                         />
                                     </RadioGroup.ItemControl>
                                     <RadioGroup.ItemText
-                                        class="text-sm [&:not([data-state=checked])]:text-gray-400"
+                                        class="text-sm not-data-[state=checked]:text-gray-400"
                                     >
                                         {value}
                                     </RadioGroup.ItemText>
