@@ -10,8 +10,8 @@ export type API = {
 
 export const apis: API[] = db
 
-export const apisProps = apis.map((a) => a.props)
-export const apisPropsKeys = unique(apisProps.flatMap((a) => Object.keys(a)))
+const apisProps = apis.map((a) => a.props)
+const apisPropsKeys = unique(apisProps.flatMap((a) => Object.keys(a)))
 export const apisPropsKeysValues = apisPropsKeys.map((p) => ({
     label: p as "Category" | "Auth" | "HTTPS" | "CORS",
     values: unique(apisProps.map((a) => a[p])),
