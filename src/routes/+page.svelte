@@ -128,12 +128,12 @@
             >
                 {#snippet children({ pages, page, totalPages })}
                     <Pagination.PrevTrigger
-                        class="bg-background flex h-12 min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 disabled:cursor-not-allowed disabled:opacity-25"
+                        class="bg-background flex h-12 w-full min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 disabled:cursor-not-allowed disabled:opacity-25"
                     >
                         <IconCaretLeftRegular />
                     </Pagination.PrevTrigger>
 
-                    <div class="flex items-center lg:hidden">
+                    <div class="flex items-center px-8 lg:hidden">
                         {page}/{totalPages}
                     </div>
 
@@ -158,7 +158,7 @@
                     </div>
 
                     <Pagination.NextTrigger
-                        class="bg-background flex h-12 min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-25"
+                        class="bg-background flex h-12 w-full min-w-12 items-center justify-center border-2 border-gray-800 not-[:disabled]:hover:border-gray-700 focus-visible:border-yellow-500 focus-visible:text-yellow-500 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-25"
                     >
                         <IconCaretRightRegular />
                     </Pagination.NextTrigger>
