@@ -7,7 +7,6 @@
     import IconCircleFill from "phosphor-icons-svelte/IconCircleFill.svelte"
     import IconGearSixFill from "phosphor-icons-svelte/IconGearSixFill.svelte"
     import IconXCircleFill from "phosphor-icons-svelte/IconXCircleFill.svelte"
-    import { type Snippet } from "svelte"
     import { Collapsible } from "ui-ingredients/collapsible"
     import { Pagination } from "ui-ingredients/pagination"
     import { RadioGroup } from "ui-ingredients/radio-group"
