@@ -106,7 +106,7 @@
 </script>
 
 <div class="container grid gap-8 pt-8 pb-16 lg:grid-cols-[auto_20rem]">
-    {@render Aside({ Search })}
+    {@render Aside()}
 
     <main>
         {#if pageApis.length}
@@ -176,7 +176,7 @@
     </main>
 </div>
 
-{#snippet Aside({ Search }: { Search: Snippet })}
+{#snippet Aside()}
     <aside class="lg:sticky lg:top-8 lg:order-1 lg:self-start">
         <div class="hidden space-y-4 lg:block">
             {@render Search()}
