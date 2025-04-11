@@ -81,7 +81,7 @@
     })
 
     const apisToShow = $derived(findApis(apis, filters))
-    const pageApis: API[] = $derived(getCurrentPageApis(apisToShow, filters))
+    const pageApis = $derived(getCurrentPageApis(apisToShow, filters))
 
     const pageCount = $derived(
         Math.ceil(apisToShow.length / Number(filters.pageSize)),

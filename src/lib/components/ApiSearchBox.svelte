@@ -4,7 +4,7 @@
     let {
         value = $bindable(),
     }: {
-        value?: string
+        value: string
     } = $props()
 
     const id = $props.id()
