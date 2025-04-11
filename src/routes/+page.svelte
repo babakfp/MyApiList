@@ -212,7 +212,7 @@
             }}
         >
             {#snippet children(context)}
-                <div class="flex gap-2">
+                <div class="relative z-2 flex gap-2">
                     <Select.Control class="flex-1">
                         <Select.Trigger
                             class="relative flex h-12 w-full flex-1 items-center justify-between border-2 border-gray-800 px-4 hover:border-gray-700 focus-visible:border-yellow-500 data-[state=checked]:text-gray-400"
@@ -234,7 +234,7 @@
                 </div>
                 <Select.Positioner>
                     <Select.Content
-                        class="bg-background z-1 max-h-72 overflow-y-auto border-2 border-gray-800 focus-visible:border-yellow-500"
+                        class="bg-background z-1 max-h-72 overflow-y-auto border-2 border-gray-800 shadow-[0_0_1rem_1rem_var(--color-background)] focus-visible:border-yellow-500"
                     >
                         {#each categoryOptionData as item}
                             <Select.Item
