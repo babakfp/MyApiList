@@ -46,7 +46,7 @@
         })
 
         // If url.searchParams are empty, url.search becomes "", and goto("") won't trigger navigation. Fallback to "/" to ensure the router properly processes the navigation.
-        goto(url.search || "/", { keepFocus: true, noScroll: true })
+        goto(url.search || "/", { keepFocus: true })
     }
 
     const searchApis = (query: string) => {
@@ -81,10 +81,6 @@
 
     const apisToShow = $derived(findApis(apis, filters))
     const pageApis = $derived(getCurrentPageApis(apisToShow, filters))
-
-    const pageCount = $derived(
-        Math.ceil(apisToShow.length / Number(filters.pageSize)),
-    )
 
     $effect(() => {
         filters.page = "1"
@@ -126,7 +122,7 @@
                 onPageChange={(page) => {
                     filters.page = String(page.page)
                 }}
-                count={pageCount}
+                count={apisToShow.length}
             >
                 {#snippet children({ pages, page, totalPages })}
                     <Pagination.PrevTrigger
@@ -135,7 +131,9 @@
                         <IconCaretLeftRegular />
                     </Pagination.PrevTrigger>
 
-                    <div class="flex items-center px-8 lg:hidden">
+                    <div
+                        class="flex min-w-20 items-center justify-center lg:hidden"
+                    >
                         {page}/{totalPages}
                     </div>
 
