@@ -2,6 +2,7 @@
 export default {
     semi: false,
     tabWidth: 4,
+    htmlWhitespaceSensitivity: "ignore",
     experimentalTernaries: true,
     experimentalOperatorPosition: "start",
     plugins: [
