@@ -21,8 +21,8 @@
     type Filters = typeof filters
     let filters = $state({
         query: url.searchParams.get("query") || "",
-        page: url.searchParams.get("page") || "1",
-        pageSize: url.searchParams.get("pageSize") || "20",
+        page: Number(url.searchParams.get("page")) || 1,
+        pageSize: Number(url.searchParams.get("pageSize")) || 20,
         Category: url.searchParams.get("Category") || "",
         Auth: url.searchParams.get("Auth") || "",
         HTTPS: url.searchParams.get("HTTPS") || "",
@@ -40,9 +40,9 @@
         })
         Object.entries(filters).forEach(([key, value]) => {
             if (!value) return
-            if (key === "page" && value === "1") return
-            if (key === "pageSize" && value === "20") return
-            url.searchParams.set(key, value)
+            if (key === "page" && value === 1) return
+            if (key === "pageSize" && value === 20) return
+            url.searchParams.set(key, String(value))
         })
 
         // If url.searchParams are empty, url.search becomes "", and goto("") won't trigger navigation. Fallback to "/" to ensure the router properly processes the navigation.
@@ -62,9 +62,7 @@
     }
 
     const getCurrentPageApis = (apis: API[], filters: Filters) => {
-        const page = Number(filters.page)
-        const pageSize = Number(filters.pageSize)
-        return apis.slice((page - 1) * pageSize, page * pageSize)
+        return apis.slice((filters.page - 1) * filters.pageSize, filters.page * filters.pageSize)
     }
 
     const findApis = (apis: API[], filters: Filters) => {
@@ -83,7 +81,7 @@
     const pageApis = $derived(getCurrentPageApis(apisToShow, filters))
 
     $effect(() => {
-        filters.page = "1"
+        filters.page = 1
         const _dependency = apisToShow.length
     })
 
@@ -117,10 +115,10 @@
         {#if apisToShow.length}
             <Pagination.Root
                 class="bg-background sticky bottom-0 mt-8 -mb-4 flex justify-between gap-4 pb-4 shadow-[0_0_1rem_1rem_var(--color-background)]"
-                page={Number(filters.page)}
-                defaultPageSize={Number(filters.pageSize)}
+                page={filters.page}
+                defaultPageSize={filters.pageSize}
                 onPageChange={(page) => {
-                    filters.page = String(page.page)
+                    filters.page = page.page
                 }}
                 count={apisToShow.length}
             >
