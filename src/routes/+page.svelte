@@ -62,7 +62,10 @@
     }
 
     const getCurrentPageApis = (apis: API[], filters: Filters) => {
-        return apis.slice((filters.page - 1) * filters.pageSize, filters.page * filters.pageSize)
+        return apis.slice(
+            (filters.page - 1) * filters.pageSize,
+            filters.page * filters.pageSize,
+        )
     }
 
     const findApis = (apis: API[], filters: Filters) => {
