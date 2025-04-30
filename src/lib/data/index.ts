@@ -1,4 +1,4 @@
-import db from "$lib/db/db.json" with { type: "json" }
+import db from "$lib/data/db.json" with { type: "json" }
 
 export type API = {
     name: string

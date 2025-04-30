@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { API } from "$lib/db/index.ts"
+    import type { API } from "$lib/data/index.ts"
 
     const api: API = $props()
 </script>
