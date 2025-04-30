@@ -14,7 +14,7 @@
     import { goto } from "$app/navigation"
     import ApiCard from "$lib/components/ApiCard.svelte"
     import ApiSearchBox from "$lib/components/ApiSearchBox.svelte"
-    import { apiMetadata, apis, type API } from "$lib/db"
+    import { apiMetadata, apis, type API } from "$lib/db/index.ts"
 
     const url = new URL(window.location.href)
 
